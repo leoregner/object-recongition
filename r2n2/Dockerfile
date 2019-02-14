@@ -2,7 +2,7 @@ FROM floydhub/theano:0.9.0-gpu-py3.6
 MAINTAINER Leopold Mathias Regner "me@leoregner.eu"
 
 # download and install dependencies
-RUN apt-get update && apt-get install -y git curl bash python3 meshlab cuda || /bin/true
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git curl bash python3 meshlab cuda || /bin/true
 RUN cd /tmp && curl -O https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh && bash Anaconda3-2018.12-Linux-x86_64.sh -b
 
 # download and install R2N2 as described in https://github.com/chrischoy/3D-R2N2
