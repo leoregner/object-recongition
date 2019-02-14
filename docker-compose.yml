@@ -1,0 +1,8 @@
+version: '2.3'
+services:
+  r2n2:
+    build: ./r2n2/
+    runtime: nvidia
+  cloudcompare:
+    build: ./cloudcompare/
+    privileged: True
