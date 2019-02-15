@@ -105,7 +105,45 @@
 								</table>
 							</td>
 						</tr>
+                        <tr ng-if="task.type == 'loop'">
+                            <td>
+                                <table>
+                                    <tr class="short">
+                                        <td colspan="2">
+                                            <div class="connector" />
+                                            <hr class="fork" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="connector" />
+                                        </td>
+                                        <td ng-repeat="process in [ task.branch ]">
+                                            <table ng-include="'sequence'" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <hr class="merge" />
+                                            <div class="connector" />
+                                            <img src="icons/loop.svg" title="loop" ng-click="edit(task, process, index); $event.stopPropagation()" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input class="condition" type="text" ng-model="task.end" />
+                                            <div class="connector" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
 					</tbody>
+                    <tr style="height: auto">
+                        <td>
+                            <div class="connector" />
+                        </td>
+                    </tr>
 				</script>
 			</div>
 			<div id="vars">

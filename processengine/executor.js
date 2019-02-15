@@ -44,6 +44,10 @@ var executeSequence = async function(sequence, context)
 				}
 				else throw 'No condition met and no default branch available.';
 				
+            case 'loop':
+                do { await executeSequence(task.branch, context) } while(!contextualEval(task.end, context));
+                break;
+                
 			default:
 				throw 'Unknown task type: ' + task.type;
 		}

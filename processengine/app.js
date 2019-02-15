@@ -33,19 +33,26 @@ angular.module('processEngine', [])
 					}
 				],
 				[
-					{
-						"type": "webservice",
-						"name": "A3",
-						"method": "GET",
-						"url": "",
-						"pre": "console.log('starting A3'); { greeting: 'hello' }",
-						"post": "console.log('done with A3')"
-					},
-					{
-						"type": "script",
-						"name": "A4",
-						"script": "console.log('doing A4')"
-					}
+                    {
+                        "type": "loop",
+                        "end": "true",
+                        "branch":
+                        [
+                            {
+                                "type": "webservice",
+                                "name": "A3",
+                                "method": "GET",
+                                "url": "",
+                                "pre": "console.log('starting A3'); { greeting: 'hello' }",
+                                "post": "console.log('done with A3')"
+                            },
+                            {
+                                "type": "script",
+                                "name": "A4",
+                                "script": "console.log('doing A4')"
+                            }
+                        ]
+                    }
 				]
 			]
 		},
@@ -94,6 +101,6 @@ angular.module('processEngine', [])
 	
 	$scope.edit = function(task, parentBranch, index)
 	{
-		alert(task.type + ' is the ' + index + 'th element in ' + parentBranch);
+		alert(task.type + ' is the ' + index + 'th element in ' + parentBranch);// TODO
 	};
 }]);
