@@ -1,10 +1,5 @@
 .bpmn
 {
-	width: 800px;
-}
-
-.bpmn
-{
 	table-layout: fixed;
 	border-collapse: collapse;
 }
@@ -15,10 +10,11 @@
 	-webkit-filter: grayscale(100%);
 }
 
-.bpmn tbody, .bpmn table
+.bpmn table
 {
 	width: 100%;
     height: 100%;
+    min-height: 30px;
 	table-layout: fixed;
 	border-collapse: collapse;
 }
@@ -80,7 +76,6 @@
 
 .bpmn img.labeled
 {
-	width: 40px;
 	height: 40px;
 }
 
@@ -100,7 +95,13 @@
 	font-family: 'Comic Sans MS', sans-serif;
 }
 
-*[ng-click]
+.bpmn td > .emptyBranchIndicator
 {
-	cursor: pointer;
+    display: none;
+}
+
+.bpmn td:hover > .emptyBranchIndicator, .bpmn td > .emptyBranchIndicator:hover
+{
+    height: 25px;
+    display: inline;
 }
