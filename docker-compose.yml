@@ -6,3 +6,6 @@ services:
   cloudcompare:
     build: ./cloudcompare/
     privileged: True
+  processengine:
+    image: nginx
+    volume: ./processengine:/usr/share/nginx/html:ro
