@@ -1,0 +1,105 @@
+.bpmn
+{
+	width: 800px;
+}
+
+.bpmn
+{
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.running
+{
+	filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+}
+
+.bpmn tbody, .bpmn table
+{
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.bpmn .fork
+{
+	bottom: 0;
+	width: 50%;
+	margin: 0 0 0 0;
+	position: absolute;
+	left: calc(25% - 1px);
+	border: 1px solid black;
+}
+
+.bpmn tr
+{
+	height: 85px;
+	vertical-align: middle;
+}
+
+.bpmn .branchrow
+{
+	height: auto !important;
+}
+
+.bpmn tr.short
+{
+	height: 15px;
+}
+
+.bpmn td
+{
+	padding: 0 0 0 0;
+	position: relative;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.bpmn .connector
+{
+	top: 0;
+	width: 2px;
+	height: 100%;
+	z-index: -9999;
+	background: black;
+	position: absolute;
+	left: calc(50% - 1px);
+}
+
+.bpmn .merge
+{
+	top: 0;
+	width: 50%;
+	margin: 0 0 0 0;
+	position: absolute;
+	left: calc(25% - 1px);
+	border: 1px solid black;
+}
+
+.bpmn img.labeled
+{
+	width: 40px;
+	height: 40px;
+}
+
+.bpmn img:not(.labeled)
+{
+	height: 60px;
+}
+
+.bpmn .label, .bpmn .condition
+{
+	border: 0;
+	width: 100%;
+	display: block;
+	font-size: 11pt;
+	text-align: center;
+	background-color: white;
+	font-family: 'Comic Sans MS', sans-serif;
+}
+
+*[ng-click]
+{
+	cursor: pointer;
+}
