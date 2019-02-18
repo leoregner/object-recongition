@@ -3,6 +3,10 @@
         <td><img src="icons/edit.svg" /></td>
         <td>open task editor</td>
     </tr>
+    <tr ng-click="saveTask(showMenu)" ng-if="showMenu.task.type == 'script' || showMenu.task.type == 'webservice'">
+        <td><img src="icons/save.svg" /></td>
+        <td>save task as template</td>
+    </tr>
     <tr ng-click="deleteElement(showMenu)" ng-if="showMenu.parentBranch">
         <td><img src="icons/delete.svg" /></td>
         <td>delete element</td>

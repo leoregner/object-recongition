@@ -175,7 +175,14 @@ angular.module('processEngine', [])
         $scope.hideMenu();
     };
     
-    $scope.taskEditor = function(element)
+    $scope.taskEditor = function(task)
+    {
+        // TODO
+        
+        $scope.hideMenu();
+    };
+    
+    $scope.saveTask = function(task)
     {
         // TODO
         
