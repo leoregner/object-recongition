@@ -1,0 +1,36 @@
+<div ng-init="task = showModal.task">
+    <h1>Edit {{ task.name }}</h1>
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input ng-model="task.name" /></td>
+        </tr>
+        <tr ng-if="task.type == 'script'">
+            <td>Script</td>
+            <td><textarea ng-model="task.script"></textarea></td>
+        </tr>
+        <tr ng-if="task.type == 'webservice'">
+            <td>HTTP method</td>
+            <td>
+                <select ng-model="task.method">
+                    <option>GET</option>
+                    <option>POST</option>
+                    <option>PUT</option>
+                    <option>DELETE</option>
+                </select>
+            </td>
+        </tr>
+        <tr ng-if="task.type == 'webservice'">
+            <td>URL to call</td>
+            <td><input type="text" ng-model="task.url" /></td>
+        </tr>
+        <tr ng-if="task.type == 'webservice'">
+            <td>Pre-call script</td>
+            <td><textarea ng-model="task.pre"></textarea></td>
+        </tr>
+        <tr ng-if="task.type == 'webservice'">
+            <td>Post-call script</td>
+            <td><textarea ng-model="task.post"></textarea></td>
+        </tr>
+    </table>
+</div>

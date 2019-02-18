@@ -1,0 +1,16 @@
+<div>
+    <div class="default">
+        <img src="icons/script.svg" ng-click="showModal.callback(showModal.element, 'script')" />
+        <img src="icons/webservice.svg" ng-click="showModal.callback(showModal.element, 'webservice')" />
+        <img src="icons/xor.svg" ng-click="showModal.callback(showModal.element, 'xor')" />
+        <img src="icons/parallel.svg" ng-click="showModal.callback(showModal.element, 'parallel')" />
+        <img src="icons/loop.svg" ng-click="showModal.callback(showModal.element, 'loop')" />
+    </div>
+    <ul class="templates">
+        <li ng-repeat="(name, template) in taskTemplates">
+            <span ng-click="showModal.callback(showModal.element, template)">
+                {{ name }}
+            </span>
+        </li>
+    </ul>
+</div>

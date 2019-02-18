@@ -18,7 +18,7 @@
     </tr>
 </table>
 <script id="sequence" type="text/ng-template">
-    <tbody ng-repeat="(index, task) in process">
+    <tbody ng-repeat="(index, task) in process track by $index">
         <tr ng-if="task.type == 'script'">
             <td>
                 <img class="labeled" src="icons/script.svg" title="script task" ng-click="edit(task, process, index, $event)" />
@@ -72,8 +72,8 @@
                         <td ng-repeat="(condition, process) in task.branches">
                             <table>
                                 <tr>
-                                    <td>
-                                        <input class="condition" type="text" ng-model="condition" />
+                                    <td ng-init="oldValue = condition" ng-dblclick="objKeyRename(oldValue, promptEditor(condition), task.branches)">
+                                        <input class="condition" type="text" ng-model="condition" ng-blur="objKeyRename(oldValue, condition, task.branches)" />
                                         <div class="connector" />
                                     </td>
                                 </tr>

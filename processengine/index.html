@@ -19,8 +19,9 @@
 		<div ng-controller="bpmController">
             <div id="visualization" ng-include="'templates/bpmn.html'"></div>
             <div>
-                <div id="fog" ng-if="showMenu" ng-click="hideMenu()"></div>
+                <div id="fog" ng-if="showMenu || showModal" ng-click="hideMenu() || hideModal()"></div>
                 <div id="menu" style="display: none" ng-include="'templates/menu.html'"></div>
+                <div id="modal" ng-if="showModal" ng-include="showModal.modal == 'new' ? 'templates/gallery.html' : 'templates/editor.html'"></div>
             </div>
             <div id="dashboard" ng-include="'templates/dashboard.html'"></div>
 		</div>

@@ -39,7 +39,7 @@ var executeSequence = async function(sequence, context, scope)
 					}
 				if(task.branches.default)
 				{
-					await task.branches.default;
+					await executeSequence(task.branches.default, context, scope);
 					break;
 				}
 				else throw 'No condition met and no default branch available.';

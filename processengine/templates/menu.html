@@ -23,7 +23,7 @@
         <td><img src="icons/insert_above.svg" /></td>
         <td>add element here</td>
     </tr>
-    <tr ng-click="addBranch(showMenu)" ng-if="showMenu.task.type == 'parallel' || showMenu.task.type == 'xor' || showMenu.task.type == 'or'">
+    <tr ng-click="addBranch(showMenu)" ng-if="(showMenu.task.type == 'parallel' || showMenu.task.type == 'xor' || showMenu.task.type == 'or') && !showMenu.task.branches.false">
         <td><img src="icons/add_branch.svg" /></td>
         <td>add branch</td>
     </tr>
