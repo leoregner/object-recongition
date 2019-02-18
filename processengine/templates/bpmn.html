@@ -40,7 +40,7 @@
                         <td colspan="{{ task.branches.length }}">
                             <img src="icons/parallel.svg" title="parallelity" ng-click="edit(task, process, index, $event)" />
                             <div class="connector" />
-                            <hr class="fork" />
+                            <hr class="fork" ng-style-vars="{ '--branches': task.branches.length }" />
                         </td>
                     </tr>
                     <tr class="branchrow">
@@ -50,7 +50,7 @@
                     </tr>
                     <tr>
                         <td colspan="{{ task.branches.length}}">
-                            <hr class="merge" />
+                            <hr class="merge" ng-style-vars="{ '--branches': task.branches.length }" />
                             <div class="connector" />
                             <img src="icons/merge.svg" title="end of parallelity" ng-click="edit(task, process, index, $event)" />
                         </td>
@@ -65,7 +65,7 @@
                         <td colspan="{{ count(task.branches) }}">
                             <img src="icons/xor.svg" title="decision" ng-click="edit(task, process, index, $event)" />
                             <div class="connector" />
-                            <hr class="fork" />
+                            <hr class="fork" ng-style-vars="{ '--branches': count(task.branches) }" />
                         </td>
                     </tr>
                     <tr>
@@ -87,7 +87,7 @@
                     </tr>
                     <tr class="short">
                         <td colspan="{{ count(task.branches) }}">
-                            <hr class="merge" />
+                            <hr class="merge" ng-style-vars="{ '--branches': count(task.branches) }" />
                             <div class="connector" />
                         </td>
                     </tr>
@@ -100,7 +100,7 @@
                     <tr class="short">
                         <td colspan="2">
                             <div class="connector" />
-                            <hr class="fork" />
+                            <hr class="fork" ng-style-vars="{ '--branches': 2 }" />
                         </td>
                     </tr>
                     <tr>
@@ -114,7 +114,7 @@
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <hr class="merge" />
+                            <hr class="merge"  ng-style="{ '--branches': 2 }" />
                             <div class="connector" />
                             <img src="icons/loop.svg" title="loop" ng-click="edit(task, process, index, $event)" />
                         </td>

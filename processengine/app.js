@@ -1,5 +1,17 @@
 angular.module('processEngine', [])
 
+.directive('ngStyleVars', [ '$parse', function($parse)
+{
+    return function($scope, element, attrs)
+    {
+        $scope.$watch(attrs.ngStyleVars, function(cssVars)
+        {
+            for(let key in cssVars)
+                element[0].style.setProperty(key, cssVars[key]);
+        });
+    };
+}])
+
 .controller('bpmController', [ '$scope', function($scope)
 {
 	$scope.vars = {};

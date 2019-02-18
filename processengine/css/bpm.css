@@ -22,11 +22,11 @@
 .bpmn .fork
 {
 	bottom: 0;
-	width: 50%;
 	margin: 0 0 0 0;
 	position: absolute;
-	left: calc(25% - 1px);
 	border: 1px solid black;
+    left: calc(100% / var(--branches, 2) / 2 - 1px);
+    width: calc(100% / var(--branches, 2) * (var(--branches, 2) - 1));
 }
 
 .bpmn tr
@@ -67,11 +67,11 @@
 .bpmn .merge
 {
 	top: 0;
-	width: 50%;
 	margin: 0 0 0 0;
 	position: absolute;
-	left: calc(25% - 1px);
 	border: 1px solid black;
+    left: calc(100% / var(--branches, 2) / 2 - 1px);
+    width: calc(100% / var(--branches, 2) * (var(--branches, 2) - 1));
 }
 
 .bpmn img.labeled
