@@ -89,20 +89,20 @@ angular.module('processEngine', [])
 		{
 			var errorHandler = function(x)
 			{
-				console.log('Error', x);
+				$scope.addLog('Error', x);
 				alert('Error while executing process!');
 				$scope.$apply(function() { $scope.running = false });
 			};
 			
 			var successHandler = function()
 			{
-                console.log('Process execution finished');
+                $scope.addLog('Process execution finished');
 				$scope.$apply(function() { $scope.running = false });
 			};
 			
             $scope.running = true;
-            console.log('Process execution started');
-			executeSequence($scope.process, $scope.vars).then(successHandler).catch(errorHandler);
+            $scope.addLog('Process execution started');
+			executeSequence($scope.process, $scope.vars, { console: { log: $scope.addLog } }).then(successHandler).catch(errorHandler);
 		}
 	};
 	

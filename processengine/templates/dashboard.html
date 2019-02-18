@@ -19,7 +19,7 @@
 </div>
 <div id="log">
     <ul>
-        <li ng-repeat="log in logs">
+        <li ng-repeat="log in logs track by $index">
             {{ log }}
         </li>
         <li ng-if="logs.length == 0">
