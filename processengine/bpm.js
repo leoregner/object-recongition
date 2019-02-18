@@ -62,20 +62,19 @@ var secureContextualEval = function(js, context, scope)
 {
     new Function(js); // throws exception if code is not valid
     
-    let globalScope = window, newGlobalScopeVarNames = [], newGlobalScopeVarValues = [];
+    let globalScope = window, newGlobalScopeVarNames = [ 'arguments' ], newGlobalScopeVarValues = [ undefined ];
     
-    if(scope) for(let key in scope)
+    if(scope) for(let key in scope) if(newGlobalScopeVarNames.indexOf(key) <= -1)
     {
         newGlobalScopeVarNames.push(key);
         newGlobalScopeVarValues.push(scope[key]);
     }
     
-    for(let key in globalScope) // overwrite all references to global scope to prevent XSS attacks
-        if(newGlobalScopeVarNames.indexOf(key) <= -1)
-        {
-            newGlobalScopeVarNames.push(key);
-            newGlobalScopeVarValues.push(undefined);
-        }
+    for(let key in globalScope) if(newGlobalScopeVarNames.indexOf(key) <= -1) // overwrite all references to global scope to prevent XSS attacks
+    {
+        newGlobalScopeVarNames.push(key);
+        newGlobalScopeVarValues.push(undefined);
+    }
     
     let shield = 'const script = this.code; (function(' + newGlobalScopeVarNames.join(',') + ') { return eval(script) }).apply(this.context, this.scope)';
     return (function() { return eval(shield) }).call({ code: js, context: context, scope: newGlobalScopeVarValues });
