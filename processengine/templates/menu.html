@@ -1,0 +1,30 @@
+<table>
+    <tr ng-click="taskEditor(showMenu)" ng-if="showMenu.task.type == 'script' || showMenu.task.type == 'webservice'">
+        <td><img src="icons/edit.svg" /></td>
+        <td>open task editor</td>
+    </tr>
+    <tr ng-click="deleteElement(showMenu)" ng-if="showMenu.parentBranch">
+        <td><img src="icons/delete.svg" /></td>
+        <td>delete element</td>
+    </tr>
+    <tr ng-click="insertAbove(showMenu)" ng-if="showMenu.parentBranch">
+        <td><img src="icons/insert_above.svg" /></td>
+        <td>add element above</td>
+    </tr>
+    <tr ng-click="insertBelow(showMenu)" ng-if="showMenu.parentBranch">
+        <td><img src="icons/insert_below.svg" /></td>
+        <td>add element below</td>
+    </tr>
+    <tr ng-click="insertBelow(showMenu)" ng-if="!showMenu.parentBranch">
+        <td><img src="icons/insert_above.svg" /></td>
+        <td>add element here</td>
+    </tr>
+    <tr ng-click="addBranch(showMenu)" ng-if="showMenu.task.type == 'parallel' || showMenu.task.type == 'xor' || showMenu.task.type == 'or'">
+        <td><img src="icons/add_branch.svg" /></td>
+        <td>add branch</td>
+    </tr>
+    <tr ng-click="hideMenu()">
+        <td><img src="icons/cancel.svg" /></td>
+        <td>cancel</td>
+    </tr>
+</table>

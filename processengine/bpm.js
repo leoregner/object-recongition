@@ -1,8 +1,4 @@
-var contextualEval = function(js, context)
-{
-	return (function() { return eval(js) }).call(context);
-};
-
+/** */
 var executeSequence = async function(sequence, context)
 {
 	for(var task of sequence)
@@ -51,4 +47,10 @@ var executeSequence = async function(sequence, context)
 			default:
 				throw 'Unknown task type: ' + task.type;
 		}
+};
+
+/** */
+var contextualEval = function(js, context)
+{
+	return (function() { return eval(js) }).call(context);
 };

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Process Engine</title>
+		<meta name="author" content="Leopold Mathias Regner" />
+		<meta http-equiv="content-type" content="text/html; charset=utf8" />
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<link rel="stylesheet" type="text/css" href="css/bpm.css" />
+		<link rel="stylesheet" type="text/css" href="css/menu.css" />
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.7/angular.min.js"></script>
+		<script type="text/javascript" src="bpm.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+	</head>
+	<body ng-app="processEngine">
+		<div ng-controller="bpmController">
+            <div id="visualization" ng-include="'templates/bpmn.html'"></div>
+            <div>
+                <div id="fog" ng-if="showMenu" ng-click="hideMenu()"></div>
+                <div id="menu" style="display: none" ng-include="'templates/menu.html'"></div>
+            </div>
+            <div id="dashboard" ng-include="'templates/dashboard.html'"></div>
+		</div>
+	</body>
+</html>

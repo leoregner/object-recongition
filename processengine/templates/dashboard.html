@@ -1,0 +1,29 @@
+<div id="vars">
+    <table>
+        <tr>
+            <th>variable name</th>
+            <th>variable value</th>
+            <th width="20"><img src="icons/add_branch.svg" ng-click="addVar()" /></th>
+        </tr>
+        <tr ng-repeat="(key, value) in vars">
+            <td>{{ key }}</td>
+            <td><input type="text" ng-model="vars[key]" /></td>
+            <td width="20"><img src="icons/delete.svg" ng-click="deleteVar(key)" /></td>
+        </tr>
+        <tr ng-if="count(vars) == 0">
+            <td colspan="2">
+                no variables existing
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="log">
+    <ul>
+        <li ng-repeat="log in logs">
+            {{ log }}
+        </li>
+        <li ng-if="logs.length == 0">
+            no logs available yet
+        </li>
+    </ul>
+</div>

@@ -67,7 +67,15 @@ angular.module('processEngine', [])
 	$scope.count = function(obj)
 	{
 		return typeof obj === 'object' ? Object.keys(obj).length : 0;
-	}
+	};
+    
+    $scope.addLog = function()
+    {
+        var msg = new Date().toLocaleString() + ':';
+        for(var arg of [].slice.call(arguments))
+            msg += ' ' + JSON.stringify(arg);
+        $scope.logs.push(msg);
+    };
 	
 	$scope.runProcess = function()
 	{
@@ -189,13 +197,5 @@ angular.module('processEngine', [])
     $scope.deleteVar = function(key)
     {
         delete $scope.vars[key];
-    };
-    
-    console.log = function()
-    {
-        var msg = new Date().toLocaleString() + ':';
-        for(var arg of [].slice.call(arguments))
-            msg += ' ' + JSON.stringify(arg);
-        $scope.logs.push(msg);
     };
 }]);

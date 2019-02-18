@@ -1,0 +1,138 @@
+<table class="bpmn" ng-class="{ running: running }">
+    <tr>
+        <td>
+            <img src="icons/start.svg" title="start of process" ng-click="runProcess()" />
+            <div class="connector" style="height: 50%; top: 50%" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table ng-include="'sequence'"></table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="icons/end.svg" title="end of process" />
+            <div class="connector" style="height: 50%" />
+        </td>
+    </tr>
+</table>
+<script id="sequence" type="text/ng-template">
+    <tbody ng-repeat="(index, task) in process">
+        <tr ng-if="task.type == 'script'">
+            <td>
+                <img class="labeled" src="icons/script.svg" title="script task" ng-click="edit(task, process, index, $event)" />
+                <span class="label">{{ task.name }}</span>
+                <div class="connector" />
+            </td>
+        </tr>
+        <tr ng-if="task.type == 'webservice'">
+            <td>
+                <img class="labeled" src="icons/webservice.svg" title="web service task" ng-click="edit(task, process, index, $event)" />
+                <span class="label">{{ task.name }}</span>
+                <div class="connector" />
+            </td>
+        </tr>
+        <tr ng-if="task.type == 'parallel'">
+            <td>
+                <table class="subtable">
+                    <tr>
+                        <td colspan="{{ task.branches.length }}">
+                            <img src="icons/parallel.svg" title="parallelity" ng-click="edit(task, process, index, $event)" />
+                            <div class="connector" />
+                            <hr class="fork" />
+                        </td>
+                    </tr>
+                    <tr class="branchrow">
+                        <td ng-repeat="process in task.branches">
+                            <table ng-include="'sequence'" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="{{ task.branches.length}}">
+                            <hr class="merge" />
+                            <div class="connector" />
+                            <img src="icons/merge.svg" title="end of parallelity" ng-click="edit(task, process, index, $event)" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr ng-if="task.type == 'or' || task.type == 'xor'">
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="{{ count(task.branches) }}">
+                            <img src="icons/xor.svg" title="decision" ng-click="edit(task, process, index, $event)" />
+                            <div class="connector" />
+                            <hr class="fork" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td ng-repeat="(condition, process) in task.branches">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input class="condition" type="text" ng-model="condition" />
+                                        <div class="connector" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table ng-include="'sequence'" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="short">
+                        <td colspan="{{ count(task.branches) }}">
+                            <hr class="merge" />
+                            <div class="connector" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr ng-if="task.type == 'loop'">
+            <td>
+                <table>
+                    <tr class="short">
+                        <td colspan="2">
+                            <div class="connector" />
+                            <hr class="fork" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &#x25B2;
+                            <div class="connector" />
+                        </td>
+                        <td ng-repeat="process in [ task.branch ]">
+                            <table ng-include="'sequence'" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr class="merge" />
+                            <div class="connector" />
+                            <img src="icons/loop.svg" title="loop" ng-click="edit(task, process, index, $event)" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input class="condition" type="text" ng-model="task.end" />
+                            <div class="connector" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+    <tr style="height: auto">
+        <td>
+            <img ng-if="!process || process.length == 0" class="emptyBranchIndicator" src="icons/empty.svg" ng-click="edit(process, $event)" />
+            <div class="connector" />
+        </td>
+    </tr>
+</script>
