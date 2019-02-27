@@ -8,4 +8,5 @@ services:
     privileged: True
   processengine:
     image: nginx
-    volume: ./processengine:/usr/share/nginx/html:ro
+    volumes:
+     - ./processengine:/usr/share/nginx/html:ro
