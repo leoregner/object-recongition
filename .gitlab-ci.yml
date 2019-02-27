@@ -1,6 +1,7 @@
 deploy:
   only:
    - master
-  tags: nvidia
+  tags:
+   - nvidia
   script:
    - docker-compose down && docker-compose up -d
