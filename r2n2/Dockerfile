@@ -10,5 +10,5 @@ RUN cd /root && git clone https://github.com/chrischoy/3D-R2N2.git
 RUN export PATH=$PATH:$HOME/anaconda3/bin && bash -c "cd /root/3D-R2N2 && conda create -n py3-theano python=3.6 -y && source activate py3-theano"
 RUN export PATH=$PATH:$HOME/anaconda3/bin && cd /root/3D-R2N2 && conda install pygpu mkl-service -y && pip install -r requirements.txt && cp .theanorc ~/.theanorc
 
-##RUN cd /root/3D-R2N2 && set DEVICE=cuda0 && set GPUARRAY_CUDA_VERSION=80 && python demo.py prediction.obj
+###RUN cd /root/3D-R2N2 && set DEVICE=cuda0 && set GPUARRAY_CUDA_VERSION=80 && python demo.py prediction.obj
 ENTRYPOINT [ "bash", "-c", "cd /root/3D-R2N2 && python demo.py prediction.obj" ]
