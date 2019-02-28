@@ -5,7 +5,7 @@ services:
     runtime: nvidia
     networks:
      - reverseproxynet
-  environment:
+    environment:
      - VIRTUAL_HOST=r2n2.thesis.leoregner.eu
   cloudcompare:
     build: ./cloudcompare/
