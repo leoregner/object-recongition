@@ -10,12 +10,13 @@ RUN cd /root && git clone https://github.com/chrischoy/3D-R2N2.git
 RUN bash -c "export PATH=$PATH:$HOME/anaconda3/bin && cd /root/3D-R2N2 && conda create -n py3-theano python=3.6 -y && source activate py3-theano && conda install pygpu mkl-service -y && pip install -r requirements.txt && cp .theanorc ~/.theanorc"
 
 # download pretrained model
-## TODO
+RUN curl ftp://cs.stanford.edu/cs/cvgl/ResidualGRUNet.npy --create-dirs -o /root/3D-R2N2/output/ResidualGRUNet/default_model/weights.npy
 
 # install nodejs and copy web service script
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
 COPY webservice /root/webservice
+COPY magic.py /root/3D-R2N2/magic.py
 RUN cd /root/webservice && npm install -y
 
 # run web service
