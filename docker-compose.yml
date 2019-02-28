@@ -13,7 +13,7 @@ services:
   processengine:
     image: nginx
     volumes:
-     - ./processengine:/usr/share/nginx/www:rw
+     - ./processengine:/usr/share/nginx/html:rw
     environment:
      - VIRTUAL_HOST=processengine.thesis.leoregner.eu
   reverseproxy:
