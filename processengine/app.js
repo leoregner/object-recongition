@@ -77,19 +77,16 @@ angular.module('processEngine', [])
         return window.sessionStorage.getItem(key);
     };
     
-    $scope.webStorage.getAsBase64 = function(key)
-    {
-        return window.btoa($scope.webStorage.get(key));
-    };
-    
     $scope.webStorage.set = function(key, value)
     {
         window.sessionStorage.setItem(key, value);
     };
     
-    $scope.webStorage.setAsBase64 = function(key, value)
+    $scope.webStorage.setBinary = function(key, blob)
     {
-        $scope.webStorage.set(key, window.atob(value));
+        var reader = new FileReader();
+        reader.onload = function(e) { $scope.webStorage.set(key, e.target.result) };
+        reader.readAsDataURL(blob);
     };
 	
     $scope.copy = function(obj)

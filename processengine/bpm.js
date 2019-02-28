@@ -13,24 +13,19 @@ var executeSequence = async function(sequence, context, scope)
 				break;
 
 			case 'webservice':
-				let requestData = undefined;
-				if(task.pre) requestData = secureContextualEval(task.pre, context, scope);
+				let requestData = undefined, tempScope = { request: { data: null, expect: 'json' } };
+                for(let k in scope) tempScope[k] = scope[k];
+				if(task.pre) requestData = secureContextualEval(task.pre, context, tempScope);
 				await new Promise(function(resolve, reject)
 				{
-					let responseHandler = function(data)
-                    {
-                        let oldScope = scope;
-                        scope = {};
-                        
-                        for(let k in oldScope)
-                            scope[k] = oldScope[k];
-                        
-                        scope.responseBody = data;
-                        resolve();
-                    };
-					$.ajax({ method: task.method, url: task.url, data: requestData, dataType: 'text', success: responseHandler, error: reject });
+					let responseHandler = function(data) { tempScope.responseBody = data; resolve() };
+                    let requestConfig = { method: task.method, url: task.url, success: responseHandler, error: reject };
+                    requestConfig.data = tempScope.request.data;
+                    requestConfig.dataType = tempScope.request.expect;
+                    if(tempScope.request.expect == 'binary') requestConfig.processData = false;
+					$.ajax(requestConfig);
 				});
-				if(task.post) secureContextualEval(task.post, context, scope);
+				if(task.post) secureContextualEval(task.post, context, tempScope);
 				break;
 
 			case 'parallel':
