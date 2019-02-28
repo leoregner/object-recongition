@@ -13,9 +13,9 @@ from os.path import isfile, join
 
 def load_input_images(folder):
     ims = []
-    files = [f for f in listdir(folder) if isfile(join(folder, f))]
+    files = [f for f in os.listdir(folder) if isfile(join(folder, f))]
     for f in files:
-        im = Image.open(folder + f)
+        im = Image.open(join(folder, f))
         ims.append([np.array(im).transpose((2, 0, 1)).astype(np.float32) / 255.])
     return np.array(ims)
 
@@ -23,8 +23,8 @@ def main():
     '''Main demo function'''
     
     # load images
-    input_folder_name = sys.argv[1] if len(sys.argv) > 1 else 'in_demo/'
-    imgs = load_input_images()
+    input_folder_name = sys.argv[1] if len(sys.argv) > 1 else 'in_demo'
+    imgs = load_input_images(input_folder_name)
     
     # get output file name from command line argument
     output_file_name = sys.argv[2] if len(sys.argv) > 2 else 'demo.obj'
