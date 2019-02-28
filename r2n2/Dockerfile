@@ -1,4 +1,4 @@
-FROM floydhub/theano:0.9.0-gpu-py3.6
+FROM nvidia/cuda:9.0-base
 MAINTAINER Leopold Mathias Regner "me@leoregner.eu"
 
 # download and install dependencies
