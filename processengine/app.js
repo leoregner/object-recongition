@@ -1,5 +1,41 @@
 angular.module('processEngine', [])
 
+.directive('ngFileDrop', [ function() // @see https://stackoverflow.com/a/43413408/11102694
+{
+    function fileDropzoneLink($scope, element, attrs)
+    {
+        element.bind('dragover', processDragOverOrEnter);
+        element.bind('dragenter', processDragOverOrEnter);
+        element.bind('dragend', endDragOver);
+        element.bind('dragleave', endDragOver);
+        element.bind('drop', dropHandler);
+
+        function dropHandler(angularEvent)
+        {
+            var event = angularEvent.originalEvent || angularEvent;
+            var file = event.dataTransfer.files[0];
+            event.preventDefault();
+            $scope.$eval(attrs.ngFileDrop)(file);
+        }
+        
+        function processDragOverOrEnter(angularEvent)
+        {
+            var event = angularEvent.originalEvent || angularEvent;
+            if(event) event.preventDefault();
+            event.dataTransfer.effectAllowed = 'copy';
+            element.addClass('dragging');
+            return false;
+        }
+
+        function endDragOver()
+        {
+            element.removeClass('dragging');
+        }
+    }
+    
+    return { restrict: 'A', link: fileDropzoneLink };
+}])
+
 .directive('ngStyleVars', [ '$parse', function($parse)
 {
     return function($scope, element, attrs)
@@ -18,6 +54,43 @@ angular.module('processEngine', [])
     $scope.logs = [];
 	$scope.process = [];
     $scope.taskTemplates = {};
+    $scope.webStorage = {};
+    
+    $scope.processUploaded = function(file)
+    {
+        if(file.type !== 'application/json')
+            return void alert('Process');
+        
+        var reader = new FileReader();
+        reader.onload = function(e)
+        {
+            $scope.$apply(function()
+            {
+                $scope.process = JSON.parse(e.target.result);
+            });
+        };
+        reader.readAsText(file);
+    };
+    
+    $scope.webStorage.get = function(key)
+    {
+        return window.sessionStorage.getItem(key);
+    };
+    
+    $scope.webStorage.getAsBase64 = function(key)
+    {
+        return window.btoa($scope.webStorage.get(key));
+    };
+    
+    $scope.webStorage.set = function(key, value)
+    {
+        window.sessionStorage.setItem(key, value);
+    };
+    
+    $scope.webStorage.setAsBase64 = function(key, value)
+    {
+        $scope.webStorage.set(key, window.atob(value));
+    };
 	
     $scope.copy = function(obj)
     {
@@ -77,7 +150,7 @@ angular.module('processEngine', [])
 			
             $scope.running = true;
             $scope.addLog('Process execution started');
-			executeSequence($scope.process, $scope.vars, { console: { log: $scope.addLog } }).then(successHandler).catch(errorHandler);
+			executeSequence($scope.process, $scope.vars, { console: { log: $scope.addLog }, storage: $scope.webStorage }).then(successHandler).catch(errorHandler);
 		}
 	};
 	

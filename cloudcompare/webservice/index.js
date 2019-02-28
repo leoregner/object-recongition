@@ -11,6 +11,8 @@ const log = function()
 
 app.get('/', function(req, res)
 {
+    res.header('Access-Control-Allow-Origin', '*');
+    
     // TODO
     ps.execSync('./do_cloudcompare.sh');
 });

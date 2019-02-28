@@ -17,8 +17,18 @@ var executeSequence = async function(sequence, context, scope)
 				if(task.pre) requestData = secureContextualEval(task.pre, context, scope);
 				await new Promise(function(resolve, reject)
 				{
-					let responseHandler = function(data) { context.response = data; resolve() };
-					$.ajax({ method: task.method, url: task.url, data: requestData, dataType: 'json', success: responseHandler, error: reject });
+					let responseHandler = function(data)
+                    {
+                        let oldScope = scope;
+                        scope = {};
+                        
+                        for(let k in oldScope)
+                            scope[k] = oldScope[k];
+                        
+                        scope.responseBody = data;
+                        resolve();
+                    };
+					$.ajax({ method: task.method, url: task.url, data: requestData, dataType: 'text', success: responseHandler, error: reject });
 				});
 				if(task.post) secureContextualEval(task.post, context, scope);
 				break;

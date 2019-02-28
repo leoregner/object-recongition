@@ -16,6 +16,8 @@ const log = function()
 
 app.get('/', function(req, res)
 {
+    res.header('Access-Control-Allow-Origin', '*');
+    
     const id = uuidv4();
     log('received request - processing as ', id);
     
