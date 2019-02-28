@@ -18,4 +18,4 @@ RUN apt-get install -y nodejs
 COPY webservice /root/webservice
 RUN cd /root/webservice && npm install -y
 
-ENTRYPOINT [ "cd /root/webservice && npm start" ]
+ENTRYPOINT [ "bash", "-c", "cd /root/webservice && node index.js" ]
