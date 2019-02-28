@@ -1,4 +1,4 @@
-const express = require('express'), ps = require('child_process'), fs = require('fs');
+const express = require('express'), ps = require('child_process'), fs = require('fs'), crypto = { getRandomValues: require('get-random-values') };
 const app = express();
 
 const uuidv4 = function() // @author https://stackoverflow.com/a/2117523
