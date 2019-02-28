@@ -4,4 +4,4 @@ deploy:
   tags:
    - nvidia
   script:
-   - docker-compose down && docker-compose up -d
+   - docker-compose down && docker-compose up -d --build
