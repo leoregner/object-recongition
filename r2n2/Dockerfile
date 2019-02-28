@@ -12,10 +12,12 @@ RUN bash -c "export PATH=$PATH:$HOME/anaconda3/bin && cd /root/3D-R2N2 && conda 
 # download pretrained model
 ## TODO
 
-# install nodejs and run web service
+# install nodejs and copy web service script
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
 COPY webservice /root/webservice
 RUN cd /root/webservice && npm install -y
 
+# run web service
 ENTRYPOINT [ "bash", "-c", "cd /root/webservice && node index.js" ]
+EXPOSE 80/tcp
