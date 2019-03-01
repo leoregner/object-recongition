@@ -24,4 +24,4 @@ services:
      - ./reverseproxy/conf/error-pages.conf:/etc/nginx/conf.d/error-pages.conf:rw
      - ./reverseproxy/html:/usr/share/nginx/html:rw
     ports:
-     - "8080:80"
+     - "80:80"
