@@ -20,6 +20,8 @@ services:
     image: jwilder/nginx-proxy
     volumes:
      - /var/run/docker.sock:/tmp/docker.sock:ro
-     - ./reverseproxy:/etc/nginx/conf.d:rw
+     - ./reverseproxy/conf/proxy-settings.conf:/etc/nginx/conf.d/proxy-settings.conf:rw
+     - ./reverseproxy/conf/error-pages.conf:/etc/nginx/conf.d/error-pages.conf:rw
+     - ./reverseproxy/html:/usr/share/nginx/html:rw
     ports:
-     - "80:80"
+     - "8080:80"
