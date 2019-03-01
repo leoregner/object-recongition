@@ -25,6 +25,9 @@ app.get('/', function(req, res)
     fs.mkdirSync('/root/3D-R2N2/in_' + id);
     //TODO https://www.npmjs.com/package/express-fileupload
     
+    // edit pictures
+    //TODO convert to 127 * 127 px PNG files WITHOUT alpha channel - @see https://github.com/chrischoy/3D-R2N2/issues/37
+    
     // execute script triggering 3D library
     ps.execSync('./make_3d.sh "' + id + '"');
     

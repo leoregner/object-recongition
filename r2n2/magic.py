@@ -39,7 +39,7 @@ def main():
     voxel_prediction, _ = solver.test_output(imgs)
     
     # save the prediction to an OBJ (mesh) file
-    voxel2obj(pred_file_name, voxel_prediction[0, :, 1, :, :] > cfg.TEST.VOXEL_THRESH)
+    voxel2obj(output_file_name, voxel_prediction[0, :, 1, :, :] > cfg.TEST.VOXEL_THRESH)
 
 if __name__ == '__main__':
     # Set the batch size to 1
