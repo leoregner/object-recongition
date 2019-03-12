@@ -7,7 +7,10 @@
         </tr>
         <tr ng-repeat="(key, value) in vars">
             <td>{{ key }}</td>
-            <td><input type="text" ng-model="vars[key]" /></td>
+            <td>
+                <span ng-if="vars[key].startsWith && vars[key].startsWith('data:')"><i ng-click="dataStorage.download(key)">binary data</i></span>
+                <input ng-if="!(vars[key].startsWith && vars[key].startsWith('data:'))" type="text" ng-model="vars[key]" />
+            </td>
             <td width="20"><img src="icons/delete.svg" ng-click="deleteVar(key)" /></td>
         </tr>
         <tr ng-if="count(vars) == 0">

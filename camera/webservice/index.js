@@ -13,6 +13,8 @@ const log = function()
 
 app.get('/', function(req, res)
 {
+    res.header('Access-Control-Allow-Origin', '*');
+    
     // --- BEGIN OF FAKE CAMERA FOR TESTING PURPOSES
     
     let files = fs.readdirSync('fakecam');

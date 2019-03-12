@@ -17,7 +17,7 @@
   background: 0;
   outline: none;
   resize: none;
-  font-size: 14px;
+  font-size: 11px;
   font-family: monospace;
   color: rgba(0, 0, 0, 0.3);
   word-break: break-all;
@@ -29,7 +29,7 @@
   border: 0px;
   padding: 0px;
   color: black;
-  font-size: 14px;
+  font-size: 11px;
   font-family: monospace;
   white-space: pre-wrap;
   word-break: break-all;

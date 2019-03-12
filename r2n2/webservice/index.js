@@ -1,5 +1,9 @@
-const express = require('express'), ps = require('child_process'), fs = require('fs'), crypto = { getRandomValues: require('get-random-values') };
+const express = require('express'), ps = require('child_process'), fs = require('fs');
+const crypto = { getRandomValues: require('get-random-values') }, fileUpload = require('express-fileupload');
+
 const app = express();
+app.use(fileUpload({ useTempFiles: true, tempFileDir: '/tmp/' }));
+app.listen(80, () => log('webservice is ready'));
 
 const uuidv4 = function() // @author https://stackoverflow.com/a/2117523
 {
@@ -23,7 +27,7 @@ app.get('/', function(req, res)
     
     // create folder and store uploaded pictures there
     fs.mkdirSync('/root/3D-R2N2/in_' + id);
-    //TODO https://www.npmjs.com/package/express-fileupload
+    for(let i in req.files) req.files[i].mv('/root/3D-R2N2/in_' + id + '/' + req.files[i].name);
     
     // edit pictures
     //TODO convert to 127 * 127 px PNG files WITHOUT alpha channel - @see https://github.com/chrischoy/3D-R2N2/issues/37
@@ -50,5 +54,3 @@ app.get('/', function(req, res)
         catch(x) {}
     });
 });
-
-app.listen(80, () => log('webservice is ready'));

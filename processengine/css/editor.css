@@ -1,0 +1,23 @@
+#editor td
+{
+    vertical-align: top;
+    padding: 5px 5px 5px 5px;
+}
+
+#editor input, #editor select, #editor textarea
+{
+    width: 550px;
+}
+
+#editor ivl-codearea, #editor .codearea, #editor pre, #editor textarea
+{
+    max-width: 550px;
+    max-height: 120px;
+}
+
+#editor .codearea
+{
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid lightgray;
+}

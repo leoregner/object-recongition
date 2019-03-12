@@ -54,7 +54,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
     $scope.logs = [];
 	$scope.process = [];
     $scope.taskTemplates = {};
-    $scope.webStorage = {};
+    $scope.dataStorage = {};
     
     $scope.processUploaded = function(file)
     {
@@ -72,23 +72,32 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
         reader.readAsText(file);
     };
     
-    $scope.webStorage.get = function(key)
-    {
-        return window.sessionStorage.getItem(key);
-    };
-    
-    $scope.webStorage.set = function(key, value)
-    {
-        window.sessionStorage.setItem(key, value);
-    };
-    
-    $scope.webStorage.setBinary = function(key, blob)
+    $scope.dataStorage.saveBinary = function(key, blob)
     {
         var reader = new FileReader();
-        reader.onload = function(e) { $scope.webStorage.set(key, e.target.result) };
+        reader.onload = function(e)
+        {
+            $scope.$apply(function()
+            {
+                $scope.vars[key] = e.target.result
+            });
+        };
         reader.readAsDataURL(blob);
     };
-	
+    
+    $scope.dataStorage.download = function(key)
+    {
+        window.open($scope.vars[key]);
+    };
+    
+    $scope.dataStorage.loadBinary = function(key) // @see https://gist.github.com/wuchengwei/b7e1820d39445f431aeaa9c786753d8e
+    {
+        var dataURL = $scope.vars[key];
+        var arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--) u8arr[n] = bstr.charCodeAt(n);
+        return new Blob([u8arr], { type: mime });
+    };
+    
     $scope.copy = function(obj)
     {
         return JSON.parse(JSON.stringify(obj));
@@ -133,7 +142,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
 		else if(confirm('Do you want to execute this process now?'))
 		{
 			var errorHandler = function(x)
-			{
+			{console.log(x);
 				$scope.addLog('Error', x);
 				alert('Error while executing process!');
 				$scope.$apply(function() { $scope.running = false });
@@ -147,7 +156,9 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
 			
             $scope.running = true;
             $scope.addLog('Process execution started');
-			executeSequence($scope.process, $scope.vars, { console: { log: $scope.addLog }, storage: $scope.webStorage }).then(successHandler).catch(errorHandler);
+            
+            const accessibleObjects = { console: { log: $scope.addLog }, storage: $scope.dataStorage, FormData: window.FormData };
+			executeSequence($scope.process, $scope.vars, accessibleObjects).then(successHandler).catch(errorHandler);
 		}
 	};
 	
