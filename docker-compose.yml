@@ -6,7 +6,7 @@ services:
      - ./camera/webservice:/root/webservice:rw
     environment:
      - VIRTUAL_HOST=camera.thesis.leoregner.eu
-    command: bash -c "cd /root/webservice && npm install -y && node index.js"
+    command: sh -c "cd /root/webservice && npm install -y && node index.js"
   r2n2:
     build: ./r2n2/
     runtime: nvidia
