@@ -1,0 +1,25 @@
+{
+  "name": "angular-codearea",
+  "authors": [
+    "Ingo van Lil <inguin@gmx.de>",
+    "Colin Kuebler <kueblc@rpi.edu>"
+  ],
+  "description": "Lightweight textarea syntax highlighting for AngularJS",
+  "main": "angular-codearea.js",
+  "keywords": [
+    "angular",
+    "textarea",
+    "syntax",
+    "highlighting"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "devDependencies": {
+    "angular": "^1.5.8"
+  }
+}

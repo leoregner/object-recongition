@@ -7,7 +7,7 @@
         </tr>
         <tr ng-if="task.type == 'script'">
             <td>Script</td>
-            <td><textarea ng-model="task.script"></textarea></td>
+            <td><ivl-codearea ng-model="task.script" syntax="js"></ivl-codearea></td>
         </tr>
         <tr ng-if="task.type == 'webservice'">
             <td>HTTP method</td>
@@ -26,11 +26,11 @@
         </tr>
         <tr ng-if="task.type == 'webservice'">
             <td>Pre-call script</td>
-            <td><textarea ng-model="task.pre"></textarea></td>
+            <td><ivl-codearea ng-model="task.pre" syntax="js"></ivl-codearea></td>
         </tr>
         <tr ng-if="task.type == 'webservice'">
             <td>Post-call script</td>
-            <td><textarea ng-model="task.post"></textarea></td>
+            <td><ivl-codearea ng-model="task.post" syntax="js"></ivl-codearea></td>
         </tr>
     </table>
 </div>

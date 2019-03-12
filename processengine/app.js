@@ -1,4 +1,4 @@
-angular.module('processEngine', [])
+angular.module('processEngine', [ 'ivl.angular-codearea' ])
 
 .directive('ngFileDrop', [ function() // @see https://stackoverflow.com/a/43413408/11102694
 {
