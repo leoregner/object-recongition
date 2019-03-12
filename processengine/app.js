@@ -133,6 +133,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
         for(var arg of [].slice.call(arguments))
             msg += ' ' + JSON.stringify(arg);
         $scope.logs.push(msg);
+        try { $scope.$apply() } catch(x) {}
     };
 	
 	$scope.runProcess = function()
@@ -146,7 +147,8 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
 		else if(confirm('Do you want to execute this process now?'))
 		{
 			var errorHandler = function(x)
-			{console.log(x);
+			{
+                console.log(x);
 				$scope.addLog('Error', x);
 				alert('Error while executing process!');
 				$scope.$apply(function() { $scope.running = false });
