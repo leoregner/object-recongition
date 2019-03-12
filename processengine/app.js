@@ -133,7 +133,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
         for(var arg of [].slice.call(arguments))
             msg += ' ' + JSON.stringify(arg);
         $scope.logs.push(msg);
-        try { $scope.$apply() } catch(x) {}
+        setTimeout(function() { $scope.$apply() }, 1);
     };
 	
 	$scope.runProcess = function()

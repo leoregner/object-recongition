@@ -9,6 +9,7 @@ services:
     expose:
      - "80"
     command: sh -c "cd /root/webservice && npm install -y && node index.js"
+    restart: always
   r2n2:
     build: ./r2n2/
     runtime: nvidia
@@ -19,12 +20,14 @@ services:
     privileged: True
     environment:
      - VIRTUAL_HOST=cloudcompare.thesis.leoregner.eu
+    restart: always
   processengine:
     image: nginx
     volumes:
      - ./processengine:/usr/share/nginx/html:rw
     environment:
      - VIRTUAL_HOST=processengine.thesis.leoregner.eu
+    restart: always
   reverseproxy:
     image: jwilder/nginx-proxy
     volumes:
@@ -34,3 +37,4 @@ services:
      - ./reverseproxy/html:/usr/share/nginx/html:rw
     ports:
      - "80:80"
+    restart: always
