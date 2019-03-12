@@ -1,4 +1,4 @@
-const express = require('express'), ps = require('child_process'), fs = require('fs');
+const express = require('express'), ps = require('child_process'), fs = require('fs'), sharp = require('sharp');
 const crypto = { getRandomValues: require('get-random-values') }, fileUpload = require('express-fileupload');
 
 const app = express();
@@ -18,19 +18,18 @@ const log = function()
     console.log.apply(null, data);
 };
 
-app.post('/', function(req, res)
+app.post('/', async function(req, res)
 {
     res.header('Access-Control-Allow-Origin', '*');
     
     const id = uuidv4();
-    log('received request - processing as ', id);
+    log('received request - processing as', id);
     
-    // create folder and store uploaded pictures there
+    // create folder to store uploaded pictures
     fs.mkdirSync('/root/3D-R2N2/in_' + id);
-    for(let i in req.files) req.files[i].mv('/root/3D-R2N2/in_' + id + '/' + req.files[i].name);
     
-    // edit pictures
-    //TODO convert to 127 * 127 px PNG files WITHOUT alpha channel - @see https://github.com/chrischoy/3D-R2N2/issues/37
+    // move uploaded pictures and convert them to 127x127 PNG files without ALPHA channel @see https://github.com/chrischoy/3D-R2N2/issues/37
+    for(let i in req.files) await sharp(req.files[i].tempFilePath).resize(127, 127).png().toFile('/root/3D-R2N2/in_' + id + '/' + i + '.png');
     
     // execute script triggering 3D library
     ps.execSync('./make_3d.sh "' + id + '"');
@@ -51,6 +50,6 @@ app.post('/', function(req, res)
             ps.execSync('rm -rf "/root/3D-R2N2/in_' + id + '/"');
             fs.unlinkSync('/root/3D-R2N2/' + id + '.obj');
         }
-        catch(x) {}
+        catch(x) { console.log(x) }
     });
 });

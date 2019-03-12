@@ -22,6 +22,7 @@ var executeSequence = async function(sequence, context, scope)
                     let requestConfig = { method: task.method, url: task.url, success: responseHandler, error: reject };
                     requestConfig.data = tempScope.request.data;
                     requestConfig.dataType = tempScope.request.expect;
+                    if(typeof tempScope.request.contentType !== 'undefined') requestConfig.contentType = tempScope.request.contentType;
                     if(tempScope.request.expect == 'binary') requestConfig.processData = false;
 					$.ajax(requestConfig);
 				});
