@@ -18,7 +18,7 @@ const log = function()
     console.log.apply(null, data);
 };
 
-app.get('/', function(req, res)
+app.post('/', function(req, res)
 {
     res.header('Access-Control-Allow-Origin', '*');
     
