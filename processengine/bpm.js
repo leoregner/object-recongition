@@ -9,13 +9,13 @@ var executeSequence = async function(sequence, context, scope)
 		switch(task.type)
 		{
 			case 'script':
-				secureContextualEval(task.script, context, scope);
+				await secureContextualEval(task.script, context, scope);
 				break;
 
 			case 'webservice':
 				let requestData = undefined, tempScope = { request: { data: null, expect: 'json' } };
                 for(let k in scope) tempScope[k] = scope[k];
-				if(task.pre) requestData = secureContextualEval(task.pre, context, tempScope);
+				if(task.pre) requestData = await secureContextualEval(task.pre, context, tempScope);
 				await new Promise(function(resolve, reject)
 				{
 					let responseHandler = function(data) { tempScope.responseBody = data; resolve() };
@@ -25,7 +25,7 @@ var executeSequence = async function(sequence, context, scope)
                     if(tempScope.request.expect == 'binary') requestConfig.processData = false;
 					$.ajax(requestConfig);
 				});
-				if(task.post) secureContextualEval(task.post, context, tempScope);
+				if(task.post) await secureContextualEval(task.post, context, tempScope);
 				break;
 
 			case 'parallel':
@@ -37,7 +37,7 @@ var executeSequence = async function(sequence, context, scope)
 
 			case 'or': case 'xor':
 				for(let condition in task.branches)
-					if(condition != 'default' && secureContextualEval(condition, context, scope))
+					if(condition != 'default' && await secureContextualEval(condition, context, scope))
 					{
 						await executeSequence(task.branches[condition], context, scope);
 						if(task.type == 'xor') break;
@@ -50,7 +50,7 @@ var executeSequence = async function(sequence, context, scope)
 				else throw 'No condition met and no default branch available.';
 				
             case 'loop':
-                do { await executeSequence(task.branch, context, scope) } while(!secureContextualEval(task.end, context, scope));
+                do { await executeSequence(task.branch, context, scope) } while(!await secureContextualEval(task.end, context, scope));
                 break;
                 
 			default:
@@ -82,5 +82,5 @@ var secureContextualEval = function(js, context, scope)
     }
     
     let shield = 'const script = this.code; (function(' + newGlobalScopeVarNames.join(',') + ') { return eval(script) }).apply(this.context, this.scope)';
-    return (function() { return eval(shield) }).call({ code: js, context: context, scope: newGlobalScopeVarValues });
+    return Promise.resolve((function() { return eval(shield) }).call({ code: js, context: context, scope: newGlobalScopeVarValues }));
 };

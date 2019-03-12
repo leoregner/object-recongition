@@ -74,15 +74,19 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
     
     $scope.dataStorage.saveBinary = function(key, blob)
     {
-        var reader = new FileReader();
-        reader.onload = function(e)
+        return new Promise(function(resolve, reject)
         {
-            $scope.$apply(function()
+            var reader = new FileReader();
+            reader.onload = function(e)
             {
-                $scope.vars[key] = e.target.result
-            });
-        };
-        reader.readAsDataURL(blob);
+                $scope.$apply(function()
+                {
+                    $scope.vars[key] = e.target.result;
+                    resolve();
+                });
+            };
+            reader.readAsDataURL(blob);
+        });
     };
     
     $scope.dataStorage.download = function(key)
@@ -95,7 +99,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
         var dataURL = $scope.vars[key];
         var arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
         while(n--) u8arr[n] = bstr.charCodeAt(n);
-        return new Blob([u8arr], { type: mime });
+        return new Blob([ u8arr ], { type: mime });
     };
     
     $scope.copy = function(obj)
