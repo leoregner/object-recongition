@@ -44,7 +44,7 @@ app.get('/', function(req, res)
         try
         {
             // delete temporary files
-            ps.execSync('rm -rf "/root/3D-R2N2/in_' +  '/"');
+            ps.execSync('rm -rf "/root/3D-R2N2/in_' + id + '/"');
             fs.unlinkSync('/root/3D-R2N2/' + id + '.obj');
         }
         catch(x) {}

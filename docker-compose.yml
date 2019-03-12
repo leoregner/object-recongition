@@ -1,5 +1,12 @@
 version: '2.3'
 services:
+  camera:
+    image: node:8.15-alpine
+    volumes:
+     - ./camera/webservice:/root/webservice:rw
+    enviroment:
+     - VIRTUAL_HOST=camera.thesis.leoregner.eu
+    command: bash -c "cd /root/webservice && npm install -y && node index.js"
   r2n2:
     build: ./r2n2/
     runtime: nvidia
