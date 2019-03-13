@@ -3,7 +3,9 @@ const crypto = { getRandomValues: require('get-random-values') }, fileUpload = r
 
 const app = express();
 app.use(fileUpload({ useTempFiles: true, tempFileDir: '/tmp/' }));
-app.listen(80, () => log('webservice is ready'));
+
+const server = app.listen(80, () => log('webservice is ready'));
+server.timeout = 1000;
 
 const uuidv4 = function() // @author https://stackoverflow.com/a/2117523
 {
