@@ -4,7 +4,7 @@ var executeSequence = async function(sequence, context, scope)
 	for(let task of sequence)
     {
         if(scope && scope.console && scope.console.log)
-            scope.console.log('Started ' + (task.name || task.type));
+            scope.console.log('Started: ' + (task.name || task.type));
         
 		switch(task.type)
 		{
@@ -59,7 +59,7 @@ var executeSequence = async function(sequence, context, scope)
 		}
         
         if(scope && scope.console && scope.console.log)
-            scope.console.log('Finished ' + (task.name || task.type));
+            scope.console.log('Finished: ' + (task.name || task.type));
     }
 };
 
