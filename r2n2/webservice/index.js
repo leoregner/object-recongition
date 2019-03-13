@@ -18,6 +18,23 @@ const log = function()
     console.log.apply(null, data);
 };
 
+const exec = function(cmd) // use await-able async exec function instead of execSync to avoid server blocking while executing
+{
+    return new Promise(function(resolve, reject)
+    {
+        const process = ps.exec('sh', [ '-c', cmd ]);
+        
+        process.stdout.on('data', console.log);
+        process.stderr.on('data', console.error);
+        
+        process.on('close', function(exitCode)
+        {
+            if(exitCode == 0) resolve();
+            else reject(exitCode);
+        });
+    });
+};
+
 app.post('/', async function(req, res)
 {
     res.header('Access-Control-Allow-Origin', '*');
@@ -32,14 +49,14 @@ app.post('/', async function(req, res)
     for(let i in req.files) await sharp(req.files[i].tempFilePath).resize(127, 127).png().toFile('/root/3D-R2N2/in_' + id + '/' + i + '.png');
     
     // execute script triggering 3D library
-    ps.execSync('./make_3d.sh "' + id + '"');
+    await exec('./make_3d.sh "' + id + '"');
     
     // stream output file as HTTP response
     res.download('/root/3D-R2N2/' + id + '.obj', function(err)
     {
         if(err)
         {
-            console.log(err);
+            console.error(err);
             res.status(500).end();
         }
         else res.end();
@@ -47,9 +64,9 @@ app.post('/', async function(req, res)
         try
         {
             // delete temporary files
-            ps.execSync('rm -rf "/root/3D-R2N2/in_' + id + '/"');
+            await exec('rm -rf "/root/3D-R2N2/in_' + id + '/"');
             fs.unlinkSync('/root/3D-R2N2/' + id + '.obj');
         }
-        catch(x) { console.log(x) }
+        catch(x) { console.error(x) }
     });
 });
