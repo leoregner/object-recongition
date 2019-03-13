@@ -5,7 +5,7 @@ const app = express();
 app.use(fileUpload({ useTempFiles: true, tempFileDir: '/tmp/' }));
 
 const server = app.listen(80, () => log('webservice is ready'));
-server.timeout = 1000;
+server.setTimeout(300 * 1000);
 
 const uuidv4 = function() // @author https://stackoverflow.com/a/2117523
 {

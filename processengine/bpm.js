@@ -19,7 +19,7 @@ var executeSequence = async function(sequence, context, scope)
 				await new Promise(function(resolve, reject)
 				{
 					let responseHandler = function(data) { tempScope.responseBody = data; resolve() };
-                    let requestConfig = { method: task.method, url: task.url, success: responseHandler, error: reject };
+                    let requestConfig = { method: task.method, url: task.url, success: responseHandler, error: reject, timeout: 0 };
                     requestConfig.data = tempScope.request.data;
                     requestConfig.dataType = tempScope.request.expect;
                     if(typeof tempScope.request.contentType !== 'undefined') requestConfig.contentType = tempScope.request.contentType;
