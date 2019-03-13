@@ -52,7 +52,7 @@ app.post('/', async function(req, res)
     await exec('./make_3d.sh "' + id + '"');
     
     // stream output file as HTTP response
-    res.download('/root/3D-R2N2/' + id + '.obj', function(err)
+    res.download('/root/3D-R2N2/' + id + '.obj', async function(err)
     {
         if(err)
         {
