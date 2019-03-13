@@ -22,7 +22,7 @@ const exec = function(cmd) // use await-able async exec function instead of exec
 {
     return new Promise(function(resolve, reject)
     {
-        const process = ps.exec('sh', [ '-c', cmd ]);
+        const process = ps.exec(cmd);
         
         process.stdout.on('data', console.log);
         process.stderr.on('data', console.error);
