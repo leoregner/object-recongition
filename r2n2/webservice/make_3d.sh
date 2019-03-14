@@ -1,5 +1,6 @@
 #!/bin/bash
 
+shopt -s expand_aliases
 alias red="GREP_COLOR='1;31' grep --color=always ."
 alias green="GREP_COLOR='1;32' grep --color=always ."
 alias yellow="GREP_COLOR='1;33' grep --color=always ."
