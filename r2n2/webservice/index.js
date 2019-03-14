@@ -72,7 +72,7 @@ app.post('/', async function(req, res)
         try
         {
             // delete temporary files
-            //await exec('rm -rf "/root/3D-R2N2/in_' + id + '/"');
+            await exec('rm -rf "/root/3D-R2N2/in_' + id + '/"');
             fs.unlinkSync('/root/3D-R2N2/' + id + '.obj');
         }
         catch(x) { log('could not delete work files:', id, x.message || x) }

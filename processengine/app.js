@@ -59,7 +59,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
     $scope.processUploaded = function(file)
     {
         if(file.type !== 'application/json')
-            return void alert('Process');
+            return void alert('Process is not a valid JSON file!');
         
         var reader = new FileReader();
         reader.onload = function(e)
@@ -114,7 +114,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
     
     $scope.promptEditor = function(x)
     {
-        let val = prompt('Edit:', x); console.log($scope.process);
+        let val = prompt('Edit:', x);
         return val ? val : x;
     };
     
