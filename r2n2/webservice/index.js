@@ -54,7 +54,7 @@ app.post('/', async function(req, res)
             let pic = sharp(req.files[i].tempFilePath).resize(127, 127);
             await pic.png().toFile('/root/3D-R2N2/in_' + id + '/' + i + '.png');
         }
-        catch(x) { log('Could not read or convert uploaded image:', req.files[i].tempFilePath, i + '.png', x.Error || x) }
+        catch(x) { log('could not read or convert uploaded input image:', req.files[i].tempFilePath, i + '.png', x.message || x) }
     
     // execute script triggering 3D library
     await exec('./make_3d.sh "' + id + '"');
@@ -64,7 +64,7 @@ app.post('/', async function(req, res)
     {
         if(err)
         {
-            log('Could not stream output file:', id, err);
+            log('could not stream output file:', id, err);
             res.status(500).end();
         }
         else res.end();
@@ -75,6 +75,6 @@ app.post('/', async function(req, res)
             //await exec('rm -rf "/root/3D-R2N2/in_' + id + '/"');
             fs.unlinkSync('/root/3D-R2N2/' + id + '.obj');
         }
-        catch(x) { log('Could not delete work files:', id, x.Error || x) }
+        catch(x) { log('could not delete work files:', id, x.message || x) }
     });
 });
