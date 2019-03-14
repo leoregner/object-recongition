@@ -48,7 +48,17 @@ app.post('/', async function(req, res)
     fs.mkdirSync('/root/3D-R2N2/in_' + id);
     
     // move uploaded pictures and convert them to 127x127 PNG files without ALPHA channel @see https://github.com/chrischoy/3D-R2N2/issues/37
-    for(let i in req.files) await sharp(req.files[i].tempFilePath).resize(127, 127).png().toFile('/root/3D-R2N2/in_' + id + '/' + i + '.png');
+    for(let i in req.files)
+        try
+        {
+            let pic = sharp(req.files[i].tempFilePath).resize(127, 127);
+            await pic.png().toFile('/root/3D-R2N2/in_' + id + '/' + i + '.png');
+        }
+        catch(x)
+        {
+            console.log('cannot read or convert uploaded image: ' + req.files[i].tempFilePath);
+            console.error(x);
+        }
     
     // execute script triggering 3D library
     await exec('./make_3d.sh "' + id + '"');
