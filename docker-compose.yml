@@ -10,14 +10,17 @@ services:
      - "80"
     command: sh -c "cd /root/webservice && npm install -y && node index.js"
     restart: always
-  r2n2:
-    build: ./r2n2/
-    runtime: nvidia
+  #r2n2:
+  #  build: ./r2n2/
+  #  runtime: nvidia
+  #  environment:
+  #   - VIRTUAL_HOST=r2n2.thesis.leoregner.eu
+  bundler:
+    build: ./bundler/
     environment:
-     - VIRTUAL_HOST=r2n2.thesis.leoregner.eu
+     - VIRTUAL_HOST=bundler.thesis.leoregner.eu
   cloudcompare:
     build: ./cloudcompare/
-    privileged: True
     environment:
      - VIRTUAL_HOST=cloudcompare.thesis.leoregner.eu
     restart: always
