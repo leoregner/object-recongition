@@ -7,6 +7,8 @@ alias yellow="GREP_COLOR='1;33' grep --color=always ."
 
 LD_LIBRARY_PATH=/root/bundler_sfm/bin
 
+mv in_abc /root/bundler_sfm/ ############ TEST ONLY
+
 echo "started rendering $1.obj" | yellow
 
 cd "/root/bundler_sfm/in_$1"

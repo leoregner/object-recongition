@@ -15,10 +15,17 @@ services:
   #  runtime: nvidia
   #  environment:
   #   - VIRTUAL_HOST=r2n2.thesis.leoregner.eu
-  bundler:
-    build: ./bundler/
+  #  restart: always
+  #bundler:
+  #  build: ./bundler/
+  #  environment:
+  #   - VIRTUAL_HOST=bundler.thesis.leoregner.eu
+  #  restart: always
+  omarpadierna:
+    build: ./omarpadierna/
     environment:
-     - VIRTUAL_HOST=bundler.thesis.leoregner.eu
+     - VIRTUAL_HOST=omarpadierna.thesis.leoregner.eu
+    restart: always
   cloudcompare:
     build: ./cloudcompare/
     environment:

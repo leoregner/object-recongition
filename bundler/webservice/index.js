@@ -52,7 +52,7 @@ app.post('/', async function(req, res)
         try
         {
             let pic = sharp(req.files[i].tempFilePath), info = await pic.metadata();
-            if(info.width > 4000 || info.height > 4000) pic = pic.resize(4000, 4000 / info.width * info.height);
+            if(info.width > 3000 || info.height > 3000) pic = pic.resize(3000, 3000 / info.width * info.height);
             await pic.jpeg().toFile('/root/bundler_sfm/in_' + id + '/' + i + '.jpg');
         }
         catch(x) { log('could not read or convert uploaded input image:', req.files[i].tempFilePath, i + '.jpg', x.message || x) }

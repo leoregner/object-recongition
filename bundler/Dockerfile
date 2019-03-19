@@ -14,17 +14,17 @@ RUN cd /root && git clone https://github.com/oelbrenner/jhead && cd jhead && mak
 ## https://code.google.com/p/ceres-solver/
 
 # compile bundler_sfm
-RUN cd /root/bundler_sfm && make
+RUN cd /root/bundler_sfm && make && cp libANN_char.so /usr/lib
 
 # manually install libvips
-RUN apt-get remove -y udev upstart && DEBIAN_FRONTEND=noninteractive apt-get install -y libvips libvips-dev libvips-tools
+#RUN apt-get remove -y udev upstart && DEBIAN_FRONTEND=noninteractive apt-get install -y libvips libvips-dev libvips-tools
 
 # install nodejs and copy web service script
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
 COPY webservice /root/webservice
-RUN cd /root/webservice && npm install -y
+#RUN cd /root/webservice && npm install -y && apt-get install -y libvips && npm install -y sharp@0.11.4 --save-dev --arch=ia32
 
 # run web service
-ENTRYPOINT [ "bash", "-c", "cd /root/webservice && node index.js" ]
+ENTRYPOINT [ "bash", "-c", "cd /root/webservice && ./make_3d.sh abc #node index.js" ]
 EXPOSE 80/tcp
