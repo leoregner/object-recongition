@@ -37,7 +37,7 @@ const exec = function(cmd) // use await-able async exec function instead of exec
     });
 };
 
-app.post('/', function(req, res)
+app.post('/', async function(req, res)
 {
     res.header('Access-Control-Allow-Origin', '*');
     
@@ -47,8 +47,12 @@ app.post('/', function(req, res)
     // create folder to store uploaded pictures
     fs.mkdirSync('/root/cloudcompare/in_' + id);
     
+    // TODO TEST DELETE
+    //req.files = { object: { tempFilePath: '/root/webservice/object.ply' }, oscene: { tempFilePath: '/root/webservice/oscene.obj' } };
+    // END TODO TEST DELETE
+    
     let obj = req.files;
-    if(req.files.object) await exec('mv "' + req.files['object'].tempFilePath + '" /root/cloudcompare/in_' + id + '/object.bin');
+    if(req.files.object) await exec('mv "' + req.files['object'].tempFilePath + '" /root/cloudcompare/in_' + id + '/object.ply');
     if(req.files.oscene) await exec('mv "' + req.files['oscene'].tempFilePath + '" /root/cloudcompare/in_' + id + '/oscene.obj');
     
     // execute script triggering 3D library
@@ -74,4 +78,4 @@ app.post('/', function(req, res)
     });*/
 });
 
-app.listen(80, () => log('webservice is ready'));
+app.listen(8080, () => log('webservice is ready'));
