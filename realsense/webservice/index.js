@@ -1,6 +1,28 @@
 const rs2 = require('node-librealsense');
 
-let colorizer = new rs2.Colorizer();
+const pc = new rs2.PointCloud();
+const pipeline = new rs2.Pipeline();
+pipeline.start();
+
+const frameSet = pipeline.waitForFrames();
+const pointsFrame = pc.calculate(frameSet.depthFrame);
+pc.mapTo(frameSet.colorFrame);
+
+let color = rameSet.colorFrame;
+let points = pointsFrame;
+
+if(points.vertices && points.textureCoordinates)
+{
+    console.log('size = ', points.size);
+    console.log('data = ', new Uint8Array(points.vertices.buffer), new Uint8Array(points.textureCoordinates.buffer), color.data, color.width, color.height);
+}
+
+pc.destroy();
+pipeline.stop();
+pipeline.destroy();
+rs2.cleanup();
+
+/*let colorizer = new rs2.Colorizer();
 let pipeline = new rs2.Pipeline();
 pipeline.start();
 
@@ -33,4 +55,4 @@ for(let i = 0; i < frameset.size; i++)
 
 pipeline.stop();
 pipeline.destroy();
-rs2.cleanup();
+rs2.cleanup();*/
