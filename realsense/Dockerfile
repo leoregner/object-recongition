@@ -11,12 +11,6 @@ RUN curl -sL https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.
 RUN chmod u+x cmake.sh && ./cmake.sh --skip-license && export PATH=$PATH:/root/bin
 RUN npm install -g jsdoc node-gyp
 
-# build librealsense
-##RUN cd /root && git clone https://github.com/IntelRealSense/librealsense.git
-##RUN cd /root/librealsense && ./scripts/setup_udev_rules.sh
-##RUN mkdir /root/librealsense/build && cd /root/librealsense/build && cmake ../ -DBUILD_EXAMPLES=true -DBUILD_NODEJS_BINDINGS=1 -DBUILD_GRAPHICAL_EXAMPLES=false
-##RUN cd /root/librealsense/build && make uninstall && make clean && make && make install
-
 # install librealsense nodejs wrapper modules | @see https://github.com/IntelRealSense/librealsense/tree/master/wrappers/nodejs
 ##RUN cd /root/librealsense/wrappers/nodejs && npm i
 ##RUN cd /root/librealsense/wrappers/nodejs/examples && npm i
