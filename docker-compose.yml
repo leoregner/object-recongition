@@ -1,30 +1,35 @@
 version: '2.3'
 services:
-  camera:
-    image: node:8.15-alpine
-    volumes:
-     - ./camera/webservice:/root/webservice:rw
+  #camera:
+  #  image: node:8.15-alpine
+  #  volumes:
+  #   - ./camera/webservice:/root/webservice:rw
+  #  environment:
+  #   - VIRTUAL_HOST=camera.thesis.leoregner.eu
+  #  expose:
+  #   - "80"
+  #  command: sh -c "cd /root/webservice && npm install -y && node index.js"
+  #  restart: always
+  #r2n2:
+  #  build: ./r2n2/
+  #  runtime: nvidia
+  #  environment:
+  #   - VIRTUAL_HOST=r2n2.thesis.leoregner.eu
+  #  restart: always
+  #omarpadierna:
+  #  build: ./omarpadierna/
+  #  environment:
+  #   - VIRTUAL_HOST=omarpadierna.thesis.leoregner.eu
+  #  restart: always
+  #cloudcompare:
+  #  build: ./cloudcompare/
+  #  environment:
+  #   - VIRTUAL_HOST=cloudcompare.thesis.leoregner.eu
+  #  restart: always
+  pcl:
+    build: ./pcl/
     environment:
-     - VIRTUAL_HOST=camera.thesis.leoregner.eu
-    expose:
-     - "80"
-    command: sh -c "cd /root/webservice && npm install -y && node index.js"
-    restart: always
-  r2n2:
-    build: ./r2n2/
-    runtime: nvidia
-    environment:
-     - VIRTUAL_HOST=r2n2.thesis.leoregner.eu
-    restart: always
-  omarpadierna:
-    build: ./omarpadierna/
-    environment:
-     - VIRTUAL_HOST=omarpadierna.thesis.leoregner.eu
-    restart: always
-  cloudcompare:
-    build: ./cloudcompare/
-    environment:
-     - VIRTUAL_HOST=cloudcompare.thesis.leoregner.eu
+     - VIRTUAL_HOST=pcl.thesis.leoregner.eu
     restart: always
   processengine:
     image: nginx
