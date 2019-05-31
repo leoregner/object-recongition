@@ -35,7 +35,7 @@ pointcloud.mapTo(color); // FIXME
 
 if(points.vertices && points.textureCoordinates)
 {
-    const plyPoints = [];
+    const vertices = [];
     
     /** @see https://github.com/IntelRealSense/librealsense/blob/master/src/archive.cpp#L48 */
     for(let i = 0; i < points.size; ++i)
@@ -54,14 +54,25 @@ if(points.vertices && points.textureCoordinates)
                 vertice.green = color.data[idx + 1];
                 vertice.blue = color.data[idx + 2];
                 
-                plyPoints.push(vertice);
+                vertices.push(vertice);
             }
     }
     
-    const ply = fs.createWriteStream('3d.ply');
+    writeToPlyFile('3d.ply', vertices);
+    writeToObjFile('3d.obj', vertices);
+}
+
+pointcloud.destroy();
+pipeline.stop();
+pipeline.destroy();
+rs2.cleanup();
+
+function writeToPlyFile(fileName, vertices)
+{
+    const ply = fs.createWriteStream(fileName);
     ply.write('ply\n');
     ply.write('\t\tformat ascii 1.0\n');
-    ply.write('\t\telement vertex ' + plyPoints.length + '\n');
+    ply.write('\t\telement vertex ' + vertices.length + '\n');
     ply.write('\t\tproperty float x\n');
     ply.write('\t\tproperty float y\n');
     ply.write('\t\tproperty float z\n');
@@ -70,14 +81,21 @@ if(points.vertices && points.textureCoordinates)
     ply.write('\t\tproperty uchar blue\n');
     ply.write('\t\tend_header\n\t\t');
     
-    for(let i = 0; i < plyPoints.length; ++i)
-        ply.write(plyPoints[i].x + ' ' + plyPoints[i].y + ' ' + plyPoints[i].z + ' ' + plyPoints[i].red + ' ' + plyPoints[i].green + ' ' + plyPoints[i].blue + '\n');
+    for(let i = 0; i < vertices.length; ++i)
+        ply.write(vertices[i].x + ' ' + vertices[i].y + ' ' + vertices[i].z + ' ' + vertices[i].red + ' ' + vertices[i].green + ' ' + vertices[i].blue + '\n');
     
     ply.end();
 }
 
-pointcloud.destroy();
-pipeline.stop();
-pipeline.destroy();
-rs2.cleanup();
+function writeToObjFile(fileName, objPoints)
+{
+    const obj = fs.createWriteStream(fileName);
+    obj.write('# OBJ File\n');
+    obj.write('# Vertices: ' + objPoints.length + '\n# Faces: 0\n');
+    
+    for(let i = 0; i < objPoints.length; ++i)
+        obj.write('vn 0.000000 0.000000 0.000000\nv ' + objPoints[i].x + ' ' + objPoints[i].y + ' ' + objPoints[i].z + '\n');
+    
+    obj.end();
+}
 
