@@ -34,6 +34,7 @@ float rf_rad_ (0.015f);
 float descr_rad_ (0.02f);
 float cg_size_ (0.01f);
 float cg_thresh_ (5.0f);
+int k_search_ (4); // default value 10
 
 void showHelp (char *filename)
 {
@@ -56,7 +57,8 @@ void showHelp (char *filename)
   std::cout << "     --rf_rad val:           Reference frame radius (default 0.015)" << std::endl;
   std::cout << "     --descr_rad val:        Descriptor radius (default 0.02)" << std::endl;
   std::cout << "     --cg_size val:          Cluster size (default 0.01)" << std::endl;
-  std::cout << "     --cg_thresh val:        Clustering threshold (default 5)" << std::endl << std::endl;
+  std::cout << "     --cg_thresh val:        Clustering threshold (default 5)" << std::endl;
+  std::cout << "     --k_search val:         K search parameter (default 10, changed to 4)" << std::endl << std::endl;
 }
 
 void parseCommandLine (int argc, char *argv[])
@@ -120,6 +122,7 @@ void parseCommandLine (int argc, char *argv[])
   pcl::console::parse_argument (argc, argv, "--descr_rad", descr_rad_);
   pcl::console::parse_argument (argc, argv, "--cg_size", cg_size_);
   pcl::console::parse_argument (argc, argv, "--cg_thresh", cg_thresh_);
+  pcl::console::parse_argument (argc, argv, "--k_search", k_search_);
 }
 
 double computeCloudResolution (const pcl::PointCloud<PointType>::ConstPtr &cloud)
@@ -209,7 +212,7 @@ int main (int argc, char *argv[])
   //  Compute Normals
   //
   pcl::NormalEstimationOMP<PointType, NormalType> norm_est;
-  norm_est.setKSearch (10);
+  norm_est.setKSearch (k_search_);
   norm_est.setInputCloud (model);
   norm_est.compute (*model_normals);
 
