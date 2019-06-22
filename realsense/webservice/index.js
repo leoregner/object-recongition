@@ -12,6 +12,7 @@ app.get('/obj', function(req, res)
     scan();
 
     // send 3D model via web service
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Content-Type', 'text/plain');
     res.send(txt);
 });
