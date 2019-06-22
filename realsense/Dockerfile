@@ -11,10 +11,6 @@ RUN curl -sL https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.
 RUN chmod u+x cmake.sh && ./cmake.sh --skip-license && export PATH=$PATH:/root/bin
 RUN npm install -g jsdoc node-gyp
 
-# install librealsense nodejs wrapper modules | @see https://github.com/IntelRealSense/librealsense/tree/master/wrappers/nodejs
-##RUN cd /root/librealsense/wrappers/nodejs && npm i
-##RUN cd /root/librealsense/wrappers/nodejs/examples && npm i
-
 # copy web service and install dependencies
 COPY webservice /root/webservice
 RUN cd /root/webservice && npm install -y
