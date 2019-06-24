@@ -273,12 +273,12 @@ main (int argc, char **argv)
 
   // Preprocess the cloud by...
   // ...removing distant points
-  const float depth_limit = 1.0;
+  /*const float depth_limit = 1.0;
   pcl::PassThrough<pcl::PointXYZ> pass;
   pass.setInputCloud (cloud);
   pass.setFilterFieldName ("z");
   pass.setFilterLimits (0, depth_limit);
-  pass.filter (*cloud);
+  pass.filter (*cloud);*/
 
   // ... and downsampling the point cloud
   const float voxel_grid_size = 0.005f;
@@ -330,6 +330,15 @@ main (int argc, char **argv)
       std::cout << "], \"t\": ";
       printf("[ %0.3f, %0.3f, %0.3f ] }", translation(0), translation(1), translation(2));
       std::cout << std::endl;
+
+      /*
+      function toTransformationMatrix(j)
+      {
+          return j.R[0][0] + ' ' + j.R[0][1] + ' ' + j.R[0][2] + ' ' + j.t[0] + '\n' +
+                 j.R[1][0] + ' ' + j.R[1][1] + ' ' + j.R[1][2] + ' ' + j.t[1] + '\n' +
+                 j.R[2][0] + ' ' + j.R[2][1] + ' ' + j.R[2][2] + ' ' + j.t[2] + '\n0 0 0 1'
+      }
+      */
   }
   else
   {
