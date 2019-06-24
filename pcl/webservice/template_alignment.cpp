@@ -229,7 +229,7 @@ main (int argc, char **argv)
   if (argc < 3)
   {
     printf ("No target PCD file given!\n");
-    printf ("Syntax: template_alignment [templates.txt | --template template.pcd] scene.pcd");
+    printf ("Syntax: template_alignment [templates.txt | --template template.pcd] scene.pcd [--api]");
     return (-1);
   }
 
@@ -307,24 +307,44 @@ main (int argc, char **argv)
   int best_index = template_align.findBestAlignment (best_alignment);
   const FeatureCloud &best_template = object_templates[best_index];
 
+  // if --api switch is present, format output as JSON object string
+  bool as_api_ (false);
+  if(pcl::console::find_switch (argc, argv, "--api"))
+    as_api_ = true;
+
   // Print the alignment fitness score (values less than 0.00002 are good)
-  printf ("Best fitness score: %f\n", best_alignment.fitness_score);
+  if(as_api_) printf("{ \"bestFitnessScore\": %f, ", best_alignment.fitness_score);
+  else printf ("Best fitness score: %f\n", best_alignment.fitness_score);
 
   // Print the rotation matrix and translation vector
   Eigen::Matrix3f rotation = best_alignment.final_transformation.block<3,3>(0, 0);
   Eigen::Vector3f translation = best_alignment.final_transformation.block<3,1>(0, 3);
 
-  printf ("\n");
-  printf ("    | %6.3f %6.3f %6.3f | \n", rotation (0,0), rotation (0,1), rotation (0,2));
-  printf ("R = | %6.3f %6.3f %6.3f | \n", rotation (1,0), rotation (1,1), rotation (1,2));
-  printf ("    | %6.3f %6.3f %6.3f | \n", rotation (2,0), rotation (2,1), rotation (2,2));
-  printf ("\n");
-  printf ("t = < %0.3f, %0.3f, %0.3f >\n", translation (0), translation (1), translation (2));
+  if(as_api_)
+  {
+      std::cout << "\"R\": [ ";
+      printf("[ %6.3f, %6.3f, %6.3f ], ", rotation(0, 0), rotation(0, 1), rotation(0, 2));
+      printf("[ %6.3f, %6.3f, %6.3f ], ", rotation(1, 0), rotation(1, 1), rotation(1, 2));
+      printf("[ %6.3f, %6.3f, %6.3f ] " , rotation(2, 0), rotation(2, 1), rotation(2, 2));
 
-  // Save the aligned template for visualization
-  pcl::PointCloud<pcl::PointXYZ> transformed_cloud;
-  pcl::transformPointCloud (*best_template.getPointCloud (), transformed_cloud, best_alignment.final_transformation);
-  pcl::io::savePCDFileBinary ("output.pcd", transformed_cloud);
+      std::cout << "], \"t\": ";
+      printf("[ %0.3f, %0.3f, %0.3f ] }", translation(0), translation(1), translation(2));
+      std::cout << std::endl;
+  }
+  else
+  {
+      printf ("\n");
+      printf ("    | %6.3f %6.3f %6.3f | \n", rotation (0,0), rotation (0,1), rotation (0,2));
+      printf ("R = | %6.3f %6.3f %6.3f | \n", rotation (1,0), rotation (1,1), rotation (1,2));
+      printf ("    | %6.3f %6.3f %6.3f | \n", rotation (2,0), rotation (2,1), rotation (2,2));
+      printf ("\n");
+      printf ("t = < %0.3f, %0.3f, %0.3f >\n", translation (0), translation (1), translation (2));
+
+      // Save the aligned template for visualization
+      pcl::PointCloud<pcl::PointXYZ> transformed_cloud;
+      pcl::transformPointCloud (*best_template.getPointCloud (), transformed_cloud, best_alignment.final_transformation);
+      pcl::io::savePCDFileBinary ("output.pcd", transformed_cloud);
+  }
 
   return (0);
 }
