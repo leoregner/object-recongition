@@ -13,6 +13,7 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/fpfh.h>
 #include <pcl/registration/ia_ransac.h>
+#include <pcl/console/parse.h>
 
 class FeatureCloud
 {
@@ -228,29 +229,47 @@ main (int argc, char **argv)
   if (argc < 3)
   {
     printf ("No target PCD file given!\n");
+    printf ("Syntax: template_alignment [templates.txt | --template template.pcd] scene.pcd");
     return (-1);
   }
 
-  // Load the object templates specified in the object_templates.txt file
   std::vector<FeatureCloud> object_templates;
-  std::ifstream input_stream (argv[1]);
-  object_templates.resize (0);
-  std::string pcd_filename;
-  while (input_stream.good ())
-  {
-    std::getline (input_stream, pcd_filename);
-    if (pcd_filename.empty () || pcd_filename.at (0) == '#') // Skip blank lines or comments
-      continue;
-
-    FeatureCloud template_cloud;
-    template_cloud.loadInputCloud (pcd_filename);
-    object_templates.push_back (template_cloud);
-  }
-  input_stream.close ();
-
-  // Load the target cloud PCD file
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-  pcl::io::loadPCDFile (argv[2], *cloud);
+
+  std::string cli_pcd_filename = std::string();
+  pcl::console::parse_argument(argc, argv, "--template", cli_pcd_filename);
+
+  if(!cli_pcd_filename.empty()) // load object template specified by command line argument
+  {
+      FeatureCloud template_cloud;
+      template_cloud.loadInputCloud(cli_pcd_filename);
+      object_templates.push_back(template_cloud);
+
+      // Load the target cloud PCD file
+      pcl::io::loadPCDFile(argv[3], *cloud);
+  }
+
+  else
+    {
+      // Load the object templates specified in the object_templates.txt file
+      std::ifstream input_stream (argv[1]);
+      object_templates.resize (0);
+      std::string pcd_filename;
+      while (input_stream.good ())
+      {
+        std::getline (input_stream, pcd_filename);
+        if (pcd_filename.empty () || pcd_filename.at (0) == '#') // Skip blank lines or comments
+          continue;
+
+        FeatureCloud template_cloud;
+        template_cloud.loadInputCloud (pcd_filename);
+        object_templates.push_back (template_cloud);
+      }
+      input_stream.close ();
+
+      // Load the target cloud PCD file
+      pcl::io::loadPCDFile (argv[2], *cloud);
+    }
 
   // Preprocess the cloud by...
   // ...removing distant points
@@ -267,9 +286,9 @@ main (int argc, char **argv)
   vox_grid.setInputCloud (cloud);
   vox_grid.setLeafSize (voxel_grid_size, voxel_grid_size, voxel_grid_size);
   //vox_grid.filter (*cloud); // Please see this http://www.pcl-developers.org/Possible-problem-in-new-VoxelGrid-implementation-from-PCL-1-5-0-td5490361.html
-  pcl::PointCloud<pcl::PointXYZ>::Ptr tempCloud (new pcl::PointCloud<pcl::PointXYZ>); 
+  pcl::PointCloud<pcl::PointXYZ>::Ptr tempCloud (new pcl::PointCloud<pcl::PointXYZ>);
   vox_grid.filter (*tempCloud);
-  cloud = tempCloud; 
+  cloud = tempCloud;
 
   // Assign to the target FeatureCloud
   FeatureCloud target_cloud;
