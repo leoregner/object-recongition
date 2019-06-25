@@ -5,7 +5,7 @@ var executeSequence = async function(sequence, context, scope)
     {
         if(scope && scope.console && scope.console.log)
             scope.console.log('Started: ' + (task.name || task.type));
-        
+
 		switch(task.type)
 		{
 			case 'script':
@@ -49,15 +49,15 @@ var executeSequence = async function(sequence, context, scope)
 					break;
 				}
 				else throw 'No condition met and no default branch available.';
-				
+
             case 'loop':
                 do { await executeSequence(task.branch, context, scope) } while(!await secureContextualEval(task.end, context, scope));
                 break;
-                
+
 			default:
 				throw 'Unknown task type: ' + task.type;
 		}
-        
+
         if(scope && scope.console && scope.console.log)
             scope.console.log('Finished: ' + (task.name || task.type));
     }
@@ -67,21 +67,21 @@ var executeSequence = async function(sequence, context, scope)
 var secureContextualEval = function(js, context, scope)
 {
     new Function(js); // throws exception if code is not valid
-    
+
     let globalScope = window, newGlobalScopeVarNames = [ 'arguments' ], newGlobalScopeVarValues = [ undefined ];
-    
+
     if(scope) for(let key in scope) if(newGlobalScopeVarNames.indexOf(key) <= -1)
     {
         newGlobalScopeVarNames.push(key);
         newGlobalScopeVarValues.push(scope[key]);
     }
-    
+
     for(let key in globalScope) if(newGlobalScopeVarNames.indexOf(key) <= -1) // overwrite all references to global scope to prevent XSS attacks
     {
         newGlobalScopeVarNames.push(key);
         newGlobalScopeVarValues.push(undefined);
     }
-    
+
     let shield = 'const script = this.code; (function(' + newGlobalScopeVarNames.join(',') + ') { return eval(script) }).apply(this.context, this.scope)';
     return Promise.resolve((function() { return eval(shield) }).call({ code: js, context: context, scope: newGlobalScopeVarValues }));
 };
