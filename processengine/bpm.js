@@ -23,7 +23,7 @@ var executeSequence = async function(sequence, context, scope)
                     requestConfig.data = tempScope.request.data;
                     requestConfig.dataType = tempScope.request.expect;
                     if(typeof tempScope.request.contentType !== 'undefined') requestConfig.contentType = tempScope.request.contentType;
-                    if(tempScope.request.expect == 'binary') requestConfig.processData = false;
+                    if(tempScope.request.expect == 'binary' || tempScope.request.data) requestConfig.processData = false;
 					$.ajax(requestConfig);
 				});
 				if(task.post) await secureContextualEval(task.post, context, tempScope);

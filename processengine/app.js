@@ -17,7 +17,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
             event.preventDefault();
             $scope.$eval(attrs.ngFileDrop)(file);
         }
-        
+
         function processDragOverOrEnter(angularEvent)
         {
             var event = angularEvent.originalEvent || angularEvent;
@@ -32,7 +32,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
             element.removeClass('dragging');
         }
     }
-    
+
     return { restrict: 'A', link: fileDropzoneLink };
 }])
 
@@ -55,12 +55,12 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
 	$scope.process = [];
     $scope.taskTemplates = {};
     $scope.dataStorage = {};
-    
+
     $scope.processUploaded = function(file)
     {
         if(file.type !== 'application/json')
             return void alert('Process is not a valid JSON file!');
-        
+
         var reader = new FileReader();
         reader.onload = function(e)
         {
@@ -71,7 +71,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
         };
         reader.readAsText(file);
     };
-    
+
     $scope.dataStorage.saveBinary = function(key, blob)
     {
         return new Promise(function(resolve, reject)
@@ -88,12 +88,17 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
             reader.readAsDataURL(blob);
         });
     };
-    
+
+    $scope.dataStorage.saveJSON = function(key, obj)
+    {
+        $scope.vars[key] = JSON.stringify(obj);
+    };
+
     $scope.dataStorage.download = function(key)
     {
         window.open($scope.vars[key]);
     };
-    
+
     $scope.dataStorage.loadBinary = function(key) // @see https://gist.github.com/wuchengwei/b7e1820d39445f431aeaa9c786753d8e
     {
         var dataURL = $scope.vars[key];
@@ -101,23 +106,28 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
         while(n--) u8arr[n] = bstr.charCodeAt(n);
         return new Blob([ u8arr ], { type: mime });
     };
-    
+
+    $scope.dataStorage.loadJSON = function(key)
+    {
+        return JSON.parse($scope.vars[key]);
+    };
+
     $scope.copy = function(obj)
     {
         return JSON.parse(JSON.stringify(obj));
     };
-    
+
 	$scope.count = function(obj)
 	{
 		return typeof obj === 'object' ? Object.keys(obj).length : 0;
 	};
-    
+
     $scope.promptEditor = function(x)
     {
         let val = prompt('Edit:', x);
         return val ? val : x;
     };
-    
+
     $scope.objKeyRename = function(oldKey, newKey, object) // @see https://stackoverflow.com/questions/4647817/javascript-object-rename-key
     {
         if(oldKey !== newKey)
@@ -126,7 +136,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
             delete object[oldKey];
         }
     };
-    
+
     $scope.addLog = function()
     {
         var msg = new Date().toLocaleString() + ':';
@@ -135,7 +145,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
         $scope.logs.push(msg);
         setTimeout(function() { $scope.$apply() }, 1);
     };
-	
+
 	$scope.runProcess = function()
 	{
 		if($scope.running)
@@ -143,7 +153,7 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
 			alert('Process is already running!');
 			return;
 		}
-		
+
 		else if(confirm('Do you want to execute this process now?'))
 		{
 			var errorHandler = function(x)
@@ -153,78 +163,78 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
 				alert('Error while executing process!');
 				$scope.$apply(function() { $scope.running = false });
 			};
-			
+
 			var successHandler = function()
 			{
                 $scope.addLog('Process execution finished');
 				$scope.$apply(function() { $scope.running = false });
 			};
-			
+
             $scope.running = true;
             $scope.addLog('Process execution started');
-            
+
             const accessibleObjects = { console: { log: $scope.addLog }, storage: $scope.dataStorage, FormData: window.FormData };
 			executeSequence($scope.process, $scope.vars, accessibleObjects).then(successHandler).catch(errorHandler);
 		}
 	};
-	
+
 	$scope.edit = function(task, parentBranch, index, $event)
 	{
         if($scope.running)
             return;
-        
+
         if(task && parentBranch && !index && !$event) // translation for function(branch, $event)
         {
             task = { type: 'sequence', branch: task };
             $event = parentBranch;
             parentBranch = undefined;
         }
-        
+
         // show it menu set its position
         $scope.showMenu = { task: task, parentBranch: parentBranch, index: index };
         $('#menu').css({ display: 'block', left: ($event.clientX + window.scrollX) + 'px', top: ($event.clientY + window.scrollY) + 'px' });
-        
+
         $event.stopPropagation();
 	};
-    
+
     $scope.deleteElement = function(element)
     {
         if(element.parentBranch && element.index)
             element.parentBranch.splice(element.index, 1);
-        
+
         else if(element.parentBranch && element.index == 0)
             element.parentBranch.shift();
-        
+
         $scope.hideMenu();
     };
-    
+
     let createEmptyElement = function(type)
     {
         switch(type)
         {
             case 'script': default:
                 return { type: type, name: 'new script task', script: '' };
-            
+
             case 'webservice':
                 return { type: type, name: 'new web service task', method: 'GET', url: 'https://example.com/', pre: '', post: '' };
-            
+
             case 'parallel':
                 return { type: type, branches: [ [], [] ] };
-            
+
             case 'xor': case 'or':
                 return { type: type, branches: { default: [] } };
-            
+
             case 'loop':
                 return { type: type, branch: [], end: 'true' };
         }
     };
-    
+
     $scope.insertAbove = function(element, insert)
     {
         if(!insert) return $scope.showModal = { modal: 'new', element: element, callback: arguments.callee };
         else if(typeof insert === 'string') insert = createEmptyElement(insert);
         else insert = $scope.copy(insert);
-        
+
         if(element.parentBranch && element.index)
             element.parentBranch.splice(element.index, 0, insert);
 
@@ -233,71 +243,71 @@ angular.module('processEngine', [ 'ivl.angular-codearea' ])
 
         else if(element.task.branch)
             element.task.branch.push(insert);
-            
+
         $scope.hideMenu();
         $scope.hideModal();
     };
-    
+
     $scope.insertBelow = function(element, insert)
     {
         if(!insert) return $scope.showModal = { modal: 'new', element: element, callback: arguments.callee };
         else if(typeof insert === 'string') insert = createEmptyElement(insert);
         else insert = $scope.copy(insert);
-        
+
         if(element.parentBranch && element.index)
             element.parentBranch.splice(element.index + 1, 0, insert);
-        
+
         else if(element.parentBranch && element.index == 0)
             element.parentBranch.splice(1, 0, insert);
-        
+
         else if(element.task.branch)
             element.task.branch.push(insert);
-        
+
         $scope.hideMenu();
         $scope.hideModal();
     };
-    
+
     $scope.addBranch = function(element)
     {
         if(element.task.type == 'parallel')
             element.task.branches.push([]);
-        
+
         else element.task.branches['false'] = [];
-        
+
         $scope.hideMenu();
     };
-    
+
     $scope.taskEditor = function(element)
     {
         $scope.showModal = { modal: 'editor', task: element.task };
         $scope.hideMenu();
     };
-    
+
     $scope.saveTask = function(element)
     {
         let templateName = prompt('Save as:', element.task.name || '');
         if(templateName) $scope.taskTemplates[templateName] = $scope.copy(element.task);
-        
+
         $scope.hideMenu();
     };
-    
+
     $scope.hideMenu = function()
     {
         $scope.showMenu = false;
         $('#menu').css({ display: 'none' });
     };
-    
+
     $scope.hideModal = function()
     {
         $scope.showModal = false;
     };
-    
+
     $scope.addVar = function()
     {
         var key = prompt('Insert variable name:');
         if(key) $scope.vars[key] = '';
     };
-    
+
     $scope.deleteVar = function(key)
     {
         delete $scope.vars[key];
