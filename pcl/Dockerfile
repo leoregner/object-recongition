@@ -19,7 +19,7 @@ ADD webservice /root/webservice
 RUN cd /root/webservice && npm install
 
 # compile pcl cli components
-RUN cd /root/webservice && mkdir build && cd build && cmake .. && make
+RUN cd /root/webservice && rm -rf build && mkdir build && cd build && cmake .. && make
 
 # expose tcp port for webservice
 EXPOSE 8080/tcp

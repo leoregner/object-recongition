@@ -26,6 +26,12 @@ services:
   #  environment:
   #   - VIRTUAL_HOST=cloudcompare.thesis.leoregner.eu
   #  restart: always
+  realsense:
+    build: ./realsense/
+    environment:
+     - VIRTUAL_HOST=realsense.thesis.leoregner.eu
+    privileged: true # share physical devices with container
+    restart: always
   pcl:
     build: ./pcl/
     environment:
