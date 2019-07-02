@@ -9,19 +9,18 @@
 This project has been configured to automatically deploy changes of the `master` branch to the Nvidia server using
 [Gitlab CI](https://gitlab.leoregner.eu/leoregner/master-thesis/blob/master/.gitlab-ci.yml).
 
-![Build Status](https://gitlab.leoregner.eu/leoregner/master-thesis/badges/master/build.svg)
-
 -  https://docs.gitlab.com/runner/install/linux-manually.html
 -  https://gitlab.com/gitlab-org/gitlab-runner/issues/1379#note_109693923
 --->
+![Build Status](https://gitlab.leoregner.eu/leoregner/master-thesis/badges/master/build.svg)
 
 ## Start
 ```bash
 docker-compose up -d --build
 ```
 
-#
-[](processengine.thesis.leoregner.eu)
+# Launch Process
+Navigate to the HTTP port of the [process engine](processengine.thesis.leoregner.eu) and drop the following JSON process model:
 
 ```json
 [
