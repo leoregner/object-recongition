@@ -20,7 +20,7 @@ docker-compose up -d --build
 ```
 
 # Launch Process
-Navigate to the HTTP port of the [process engine](processengine.thesis.leoregner.eu) and drop the following JSON process model:
+Navigate to the HTTP port of the [process engine](http://processengine.thesis.leoregner.eu/) and drop the following JSON process model:
 
 ```json
 [
