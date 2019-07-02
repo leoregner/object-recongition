@@ -1,14 +1,19 @@
-const pcd = require('./pcd.js'), math = require('mathjs');
+const express = require('express'), ps = require('child_process'), fileUpload = require('express-fileupload'), fs = require('fs');
+const uuidv4 = () => new Date().getTime() + (Math.random() + '').substring(2), pcd = require('./pcd.js'), map = require('./map.js');
 
-let pcl = {"bestFitnessScore":0.000036,"R":[[0.122,0.169,-0.978],[0.935,-0.351,0.056],[-0.334,-0.921,-0.201]],"t":[-0.091,0.056,-0.247]};
-// goal x=.55, y=.45
+// create web app server instance
+const app = express();
+app.use(fileUpload({ useTempFiles: true, tempFileDir: '/tmp/' }));
+app.listen(8080);
 
-let model = new pcd.PcdFile('../../pcl/webservice/example_models/model5000.pcd');
-
-for(let i = 0; i < model.countPoints(); ++i)
+// inject CORS-enabling headers
+app.use(function(req, res, next)
 {
-    let point = model.getPoint(i);
-    let Tv = math.add(math.multiply(pcl.R, point), pcl.t);
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
 
-    console.log(Tv);
-}
+app.post('/map', async function(req, res)
+{
+    // TODO
+});

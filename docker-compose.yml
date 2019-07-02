@@ -37,6 +37,11 @@ services:
     environment:
      - VIRTUAL_HOST=pcl.thesis.leoregner.eu
     restart: always
+  coordsmapping:
+     build: ./coordsmapping/
+     environment:
+      - VIRTUAL_HOST=coordsmapping.thesis.leoregner.eu
+     restart: always
   processengine:
     image: nginx
     volumes:
