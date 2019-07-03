@@ -6,9 +6,8 @@
 
 const rs2 = require('node-librealsense'), fs = require('fs');
 
-module.exports = function(fileName)
+module.exports = function(fileName, numberOfFrames = 100)
 {
-    const numberOfFrames = 100; // pcs
     const resolutionWidth = 848; // px
     const resolutionHeight = 480; // px
 

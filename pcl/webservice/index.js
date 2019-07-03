@@ -57,8 +57,20 @@ app.post('/cg', async function(req, res)
     if(req.files.scene) await exec('mv "' + req.files['scene'].tempFilePath + '" in_' + id + '/scene.obj');
     await exec('build/converter "in_' + id + '/scene.obj" "in_' + id + '/scene.pcd"');
 
+    // parameters
+    let parameters = {};
+    parameters.algorithm = req.query.algorithm || 'Hough';
+    parameters.model_ss = req.query.model_ss || 0.001;
+    parameters.scene_ss = req.query.scene_ss || 0.001;
+    parameters.rf_rad = req.query.rf_rad || 0.015;
+    parameters.descr_rad = req.query.descr_rad || 0.02;
+    parameters.cg_size = req.cg_size || 0.01;
+    parameters.cg_thresh = req.cg_tresh || 5.0;
+
     // execute object recognition program
-    let cmd = 'build/correspondence_grouping "in_' + id + '/model.pcd" "in_' + id + '/scene.pcd" --api --model_ss 0.001 --scene_ss 0.001 2> /dev/null';
+    let cmd = 'build/correspondence_grouping "in_' + id + '/model.pcd" "in_' + id + '/scene.pcd" --api';
+    for(let parameter in parameters) cmd += ' --' + parameter + ' ' + parameters[parameter];
+    cmd += ' 2> /dev/null';
     let json = await exec(cmd, true);
     res.send(json);
 });

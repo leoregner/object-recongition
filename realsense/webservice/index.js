@@ -9,7 +9,7 @@ app.get('/obj', function(req, res)
     let txt = ''; console.log = (line) => txt += line;
 
     // use Intel RealSense camera and create point cloud
-    scan();
+    scan(undefined, req.query.frames || 100);
 
     // send 3D model via web service
     res.header('Access-Control-Allow-Origin', '*');
