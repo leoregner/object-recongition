@@ -3,7 +3,7 @@ const fs = require('fs'), tmp = require('tmp'), FormData = require('form-data');
 
 // show experiment progress as progress bar in command line
 let experimentProgress = new cliProgress.Bar({}, cliProgress.Presets.shades_classic);
-experimentProgress.start(-1, 0);
+experimentProgress.start(18018, 0);
 
 async function experiment()
 {
@@ -22,42 +22,42 @@ async function experiment()
             {
                 model: 'model5000.pcd',
 
-                point1: 4745,
+                point1: 4745, // one base corner
                 targetx1: 0.055,
                 targety1: 0.045,
                 targetz1: 0.000,
 
-                point2: 1316,
+                point2: 1316, // opposite base corner
                 targetx2: 0.000 + .020,
                 targety2: 0.045 + .080,
                 targetz2: 1.000
-            }/*,
+            },
             {
                 model: 'cuboid5000.pcd',
 
-                point1: , // TODO
-                targetx1: .,
-                targety1: .,
-                targetz1: .,
+                point1: 2419, // one square corner
+                targetx1: -.050,
+                targety1: 0.014,
+                targetz1: 0.000,
 
-                point2: ,
-                targetx2: ,
-                targety2: ,
-                targetz2:
+                point2: 1656, // opposite square corner
+                targetx2: -.112,
+                targety2: 0.025,
+                targetz2: 0.032
             },
             {
                 model: 'cylinder5000.pcd',
 
-                point1: , // TODO
-                targetx1: .,
-                targety1: .,
-                targetz1: .,
+                point1: 1273, // center point of one circle
+                targetx1: .105,
+                targety1: .035,
+                targetz1: 0.016,
 
-                point2: ,
-                targetx2: ,
-                targety2: ,
-                targetz2:
-            }*/
+                point2: 2705, // center point of other circle
+                targetx2: .147,
+                targety2: .035 + .023,
+                targetz2: 0.016
+            }
         ];
 
         for(let scenario of scenarios)
@@ -101,9 +101,9 @@ async function experiment()
             {
                 for(let parameter of [ 'model_ss', 'scene_ss', 'rf_rad', 'descr_rad', 'cg_size' ])
                 {
-                    for(let value = .001; value < .020; value += .005)
+                    for(let value = .001; value <= .020; value += .005)
                     {
-                        for(let cg_thresh = .1; cg_thresh < 10; cg_thresh += .5)
+                        for(let cg_thresh = .1; cg_thresh <= 10; cg_thresh += .5)
                         {
                             let beginTime = new Date().getTime();
 

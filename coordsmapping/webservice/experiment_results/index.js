@@ -7,6 +7,16 @@ module.exports = async function(req, res, next)
 
     else
     {
-        // TODO send query results from data.sqlite3 to client
+        let db = new sqlite.Database('./experiment_results/data.sqlite3');
+
+        db.serialize(function()
+        {
+            let results = db.run('select count(*) from measurements');
+            res.send(results);
+
+            // TODO send useful statistical evaluations
+        });
+
+        db.close();
     }
 };
