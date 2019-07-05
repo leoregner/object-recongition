@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "experiment": "date && node experiment.js && date",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,8 +15,10 @@
     "cli-progress": "^2.1.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.5",
+    "form-data": "^2.5.0",
     "fs": "0.0.1-security",
     "mathjs": "^6.0.2",
-    "sqlite3": "^4.0.9"
+    "sqlite3": "^4.0.9",
+    "tmp": "^0.1.0"
   }
 }
