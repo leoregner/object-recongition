@@ -44,28 +44,28 @@ module.exports = async function(req, res, next)
                 db.send(`select model, avg(error) error, avg(duration) duration from ${errors} group by model order by model`);
 
             else if(req.url.indexOf('/frames.json') > -1)
-                db.send(`select frames, avg(error) error, avg(duration) duration from ${errors} group by frames order by frames`);
+                db.send(`select frames, avg(error) error, avg(duration) duration from ${errors} where frames is not null and frames > 0 group by frames order by frames`);
 
             else if(req.url.indexOf('/calgo.json') > -1)
                 db.send(`select calgo, avg(error) error, avg(duration) duration from ${errors} where calgo is not null group by calgo order by calgo`);
 
             else if(req.url.indexOf('/modelss.json') > -1)
-                db.send(`select modelss, avg(error) error, avg(duration) duration from ${errors} group by modelss order by modelss`);
+                db.send(`select modelss, avg(error) error, avg(duration) duration from ${errors} where modelss is not null and modelss > 0 group by modelss order by modelss`);
 
             else if(req.url.indexOf('/sceness.json') > -1)
-                db.send(`select sceness, avg(error) error, avg(duration) duration from ${errors} group by sceness order by sceness`);
+                db.send(`select sceness, avg(error) error, avg(duration) duration from ${errors} where sceness is not null and sceness > 0 group by sceness order by sceness`);
 
             else if(req.url.indexOf('/rfrad.json') > -1)
-                db.send(`select rfrad, avg(error) error, avg(duration) duration from ${errors} group by rfrad order by rfrad`);
+                db.send(`select rfrad, avg(error) error, avg(duration) duration from ${errors} where rfrad is not null and rfrad > 0 group by rfrad order by rfrad`);
 
             else if(req.url.indexOf('/descrrad.json') > -1)
-                db.send(`select descrrad, avg(error) error, avg(duration) duration from ${errors} group by descrrad order by descrrad`);
+                db.send(`select descrrad, avg(error) error, avg(duration) duration from ${errors} where descrrad is not null and descrrad > 0 group by descrrad order by descrrad`);
 
             else if(req.url.indexOf('/cgsize.json') > -1)
-                db.send(`select cgsize, avg(error) error, avg(duration) duration from ${errors} group by cgsize order by cgsize`);
+                db.send(`select cgsize, avg(error) error, avg(duration) duration from ${errors} where cgsize is not null and cgsize > 0 group by cgsize order by cgsize`);
 
             else if(req.url.indexOf('/cgthresh.json') > -1)
-                db.send(`select cgthresh, avg(error) error, avg(duration) duration from ${errors} group by cgthresh order by cgthresh`);
+                db.send(`select cgthresh, avg(error) error, avg(duration) duration from ${errors} where cgthresh is not null and cgthresh > 0 group by cgthresh order by cgthresh`);
 
             else next();
         });

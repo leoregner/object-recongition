@@ -6,6 +6,24 @@
         <script type="text/javascript" src="js_libs/Chart.min.js"></script>
         <script type="text/javascript" src="js_libs/axios.min.js"></script>
         <script type="text/javascript" src="js_libs/vue.min.js"></script>
+        <style type="text/css">
+            nav
+            {
+                top: 0;
+                left: 0;
+                width: 200px;
+                height: 100%;
+                position: absolute;
+            }
+            main
+            {
+                top: 0;
+                left: 200px;
+                height: 100%;
+                position: absolute;
+                width: calc(100% - 200px);
+            }
+        </style>
     </head>
     <body>
         <div id="app">
@@ -17,7 +35,7 @@
                 </ul>
             </nav>
             <main>
-                <canvas id="chart" style="height: 600px"></canvas>
+                <canvas id="chart"></canvas>
             </main>
         </div>
         <script type="text/javascript">
@@ -27,17 +45,17 @@
 
                 data:
                 {
-                    parameters: [ 'algo', 'model', 'frames', 'calgo', 'modelss', 'sceness', 'rfrad', 'descrrad', 'cgsize', 'cgtresh' ]
+                    parameters: [ 'algo', 'model', 'frames', 'calgo', 'modelss', 'sceness', 'rfrad', 'descrrad', 'cgsize', 'cgthresh' ]
                 },
 
                 methods:
                 {
                     chosen: async function(parameter)
                     {
-                        let data = await axios.get('data/' + parameter + '.json');console.log(data);
+                        let data = await axios.get('data/' + parameter + '.json');
 
                         let config = {};
-                        config.type = 'line';
+                        config.type = (parameter.indexOf('algo') > -1 || parameter == 'model') ? 'bar' : 'line';
                         config.data = {};
                         config.data.labels = data.data.map((v) => v[parameter]);
 
@@ -86,7 +104,7 @@
                             window.chart.destroy();
 
                         const ctx = document.getElementById('chart').getContext('2d');
-                        ctx.height = 600;
+                        ctx.height = window.innerHeight;
                         window.chart = new Chart(ctx, config);
                     }
                 }
