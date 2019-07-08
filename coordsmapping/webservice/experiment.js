@@ -68,6 +68,7 @@ async function experiment()
                 point2 = cloud.getPoint(scenario.point2);
 
             // template alignment
+            try
             {
                 let beginTime = new Date().getTime();
 
@@ -95,6 +96,7 @@ async function experiment()
                     scenario.targetx2, scenario.targety2, scenario.targetz2, m2[0], m2[1], m2[2]
                 ]);
             }
+            catch(x) { console.error(x) }
 
             // correspondence grouping tests
             for(let algorithm of [ 'Hough', 'GC' ])
@@ -104,43 +106,45 @@ async function experiment()
                     for(let value = .001; value <= .020; value += .005)
                     {
                         for(let cg_thresh = .1; cg_thresh <= 10; cg_thresh += .5)
-                        {
-                            let beginTime = new Date().getTime();
-
-                            // apply correspondence grouping algorithm
-                            let uploadData = new FormData();
-                            let cgParams = [ 'algorithm=' + algorithm, parameter + '=' + value, 'cg_thresh=' + cg_thresh ].join('&');
-                            let modelStream = fs.createReadStream('../../pcl/webservice/example_models/' + scenario.model);
-                            uploadData.append('model', modelStream);
-                            let sceneStream = fs.createReadStream(sceneObjFile);
-                            uploadData.append('scene', sceneStream);
-                            let result = { data: await upload('http://pcl.thesis.leoregner.eu/cg?' + cgParams, uploadData) };
-
-                            let m1 = [ null, null, null ], m2 = [ null, null, null ];
-                            if(!result.error && result.data.models.length > 0)
+                            try
                             {
-                                // select found model instance with the most correspondences
-                                let bestInstance = { correspondences: 0 };
-                                for(let instance of result.data.models)
-                                    if(bestInstance.correspondences < instance.correspondences)
-                                        bestInstance = instance;
+                                let beginTime = new Date().getTime();
 
-                                // map coordinates to world
-                                m1 = map(point1, bestInstance.R, bestInstance.t);
-                                m2 = map(point2, bestInstance.R, bestInstance.t);
+                                // apply correspondence grouping algorithm
+                                let uploadData = new FormData();
+                                let cgParams = [ 'algorithm=' + algorithm, parameter + '=' + value, 'cg_thresh=' + cg_thresh ].join('&');
+                                let modelStream = fs.createReadStream('../../pcl/webservice/example_models/' + scenario.model);
+                                uploadData.append('model', modelStream);
+                                let sceneStream = fs.createReadStream(sceneObjFile);
+                                uploadData.append('scene', sceneStream);
+                                let result = { data: await upload('http://pcl.thesis.leoregner.eu/cg?' + cgParams, uploadData) };
+
+                                let m1 = [ null, null, null ], m2 = [ null, null, null ];
+                                if(!result.error && result.data.models.length > 0)
+                                {
+                                    // select found model instance with the most correspondences
+                                    let bestInstance = { correspondences: 0 };
+                                    for(let instance of result.data.models)
+                                        if(bestInstance.correspondences < instance.correspondences)
+                                            bestInstance = instance;
+
+                                    // map coordinates to world
+                                    m1 = map(point1, bestInstance.R, bestInstance.t);
+                                    m2 = map(point2, bestInstance.R, bestInstance.t);
+                                }
+
+                                // store result in local database
+                                experimentProgress.increment();
+                                await storeResult(
+                                [
+                                    'cg', scenario.model, frames, new Date().getTime() - beginTime + scanDuration,
+                                    algorithm, parameter == 'model_ss' ? value : 0, parameter == 'scene_ss' ? value : 0, parameter === 'rf_rad' ? value : 0,
+                                    parameter == 'descr_rad' ? value : 0, parameter == 'cg_size' ? value : 0, cg_thresh, null,
+                                    scenario.targetx1, scenario.targety1, scenario.targetz1, m1[0], m1[1], m1[2],
+                                    scenario.targetx2, scenario.targety2, scenario.targetz2, m2[0], m2[1], m2[2]
+                                ]);
                             }
-
-                            // store result in local database
-                            experimentProgress.increment();
-                            await storeResult(
-                            [
-                                'cg', scenario.model, frames, new Date().getTime() - beginTime + scanDuration,
-                                algorithm, parameter == 'model_ss' ? value : 0, parameter == 'scene_ss' ? value : 0, parameter === 'rf_rad' ? value : 0,
-                                parameter == 'descr_rad' ? value : 0, parameter == 'cg_size' ? value : 0, cg_thresh, null,
-                                scenario.targetx1, scenario.targety1, scenario.targetz1, m1[0], m1[1], m1[2],
-                                scenario.targetx2, scenario.targety2, scenario.targetz2, m2[0], m2[1], m2[2]
-                            ]);
-                        }
+                            catch(x) { console.error(x) }
                     }
                 }
             }
