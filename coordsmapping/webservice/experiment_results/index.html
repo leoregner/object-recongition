@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Experiment Results Visualization</title>
+        <meta name="author" content="Leopold M. Regner" />
+        <script type="text/javascript" src="js_libs/Chart.min.js"></script>
+        <script type="text/javascript" src="js_libs/axios.min.js"></script>
+        <script type="text/javascript" src="js_libs/vue.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <nav>
+                <ul v-for="parameter in parameters">
+                    <a href="#" v-on:click="chosen(parameter)">
+                        {{ parameter }}
+                    </a>
+                </ul>
+            </nav>
+            <main>
+                <canvas id="chart" style="height: 600px"></canvas>
+            </main>
+        </div>
+        <script type="text/javascript">
+            new Vue(
+            {
+                el: '#app',
+
+                data:
+                {
+                    parameters: [ 'algo', 'model', 'frames', 'calgo', 'modelss', 'sceness', 'rfrad', 'descrrad', 'cgsize', 'cgtresh' ]
+                },
+
+                methods:
+                {
+                    chosen: async function(parameter)
+                    {
+                        let data = await axios.get('data/' + parameter + '.json');console.log(data);
+
+                        let config = {};
+                        config.type = 'line';
+                        config.data = {};
+                        config.data.labels = data.data.map((v) => v[parameter]);
+
+                        config.data.datasets =
+                        [
+                            {
+                                label: 'error',
+                                yAxisID: 'errorAxis',
+                                backgroundColor: '#ff0000',
+                                borderColor: '#ff0000',
+                                data: data.data.map((v) => v.error == null ? Number.POSITIVE_INFINITY : v.error),
+                                fill: false
+                            },
+
+                            {
+                                label: 'duration',
+                                yAxisID: 'durationAxis',
+                                backgroundColor: '#0000ff',
+                                borderColor: '#0000ff',
+                                data: data.data.map((v) => v.duration == null ? Number.POSITIVE_INFINITY : v.duration),
+                                fill: false
+                            }
+                        ];
+
+                        config.options =
+                        {
+                            responsive: true,
+                            legend: { display: false },
+                            maintainAspectRatio: false,
+                            hover: { mode: 'nearest', intersect: true },
+                            tooltips: { mode: 'index', intersect: false },
+                            title: { display: true, text: 'error and execution duration based on ' + parameter },
+
+                            scales:
+                            {
+                                xAxes: [ { display: true, scaleLabel: { display: false, labelString: 'parameter value' } } ],
+                                yAxes:
+                                [
+                                    { id: 'errorAxis', display: true, scaleLabel: { display: true, labelString: 'error' } },
+                                    { id: 'durationAxis', display: true, scaleLabel: { display: true, labelString: 'duration' } }
+                                ]
+                            }
+                        };
+
+                        if(window.chart && window.chart.destroy)
+                            window.chart.destroy();
+
+                        const ctx = document.getElementById('chart').getContext('2d');
+                        ctx.height = 600;
+                        window.chart = new Chart(ctx, config);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

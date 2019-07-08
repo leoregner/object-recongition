@@ -14,7 +14,7 @@ app.use(function(req, res, next)
 });
 
 // graphical representation of experiment data
-app.get('/experiment_results/', require('./experiment_results/index.js'));
+app.get('/experiment_results/*', require('./experiment_results/index.js'));
 
 //
 app.post('/map', async function(req, res)
