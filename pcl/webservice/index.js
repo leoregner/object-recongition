@@ -107,3 +107,29 @@ app.post('/ta', async function(req, res)
         res.send({ error: x });
     }
 });
+
+// my own baseline algorithm
+app.post('/bl', async function(req, res)
+{
+    res.header('Content-Type', 'application/json');
+
+    try
+    {
+        const id = uuidv4();
+        log('received request - processing as', id);
+
+        fs.mkdirSync('in_' + id);
+        if(req.files.model) await exec('mv "' + req.files['model'].tempFilePath + '" in_' + id + '/model.pcd');
+        if(req.files.scene) await exec('mv "' + req.files['scene'].tempFilePath + '" in_' + id + '/scene.obj');
+        await exec('build/converter "in_' + id + '/scene.obj" "in_' + id + '/scene.pcd"');
+
+        // execute base line algorithm
+        let json = await require('./baselinealgo.js')('in_' + id + '/model.pcd', 'in_' + id + '/scene.pcd');
+        res.send(json);
+
+    }
+    catch(x)
+    {
+        res.send({ error: x });
+    }
+});
