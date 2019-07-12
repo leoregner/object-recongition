@@ -3,7 +3,7 @@ const fs = require('fs'), tmp = require('tmp'), FormData = require('form-data');
 
 // show experiment progress as progress bar in command line
 let experimentProgress = new cliProgress.Bar({}, cliProgress.Presets.shades_classic);
-experimentProgress.start(18018, 0);
+experimentProgress.start(14414, 0);
 
 async function experiment()
 {
