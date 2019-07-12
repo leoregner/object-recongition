@@ -31,26 +31,36 @@ module.exports = async function(modelFile, sceneFile)
         if(highestPoint == null || model.getPoint(i)[2] < highestPoint.coords[2])
             highestPoint = { i, coords: model.getPoint(i) };
 
-    // find same height in scene and assume that there's an instance
+    // find (clusters of) points with same height in scene and assume that there's an instance
     for(let j = 0; j < scene.countPoints(); ++j)
         if(isApproximatelyTheSame(highestPoint.coords[2], mapDepthToFloor(scene.getPoint(j)[2])))
         {
-            let bestFit = { intersectingVolume: 0 };
-
-            // rotate model on floor and find best fit
-            for(let deg = 0; i < 360; ++i)
-            {
-                let rotationMatrix = [ [], [], [], [] ]; // TODO
-                let translationVector = []; // TODO
-
-                let intersectingVolume = 0; // TODO
-
-                if(intersectingVolume > bestFit.intersectingVolume)
-                    bestFit = { "R": rotationMatrix, "t": translationVector, intersectingVolume };
-            }
-
-            instances.push({ "R": bestFit.R, "t": bestFit.t });
+            // TODO instances.push({ ... });
         }
+
+    // find exact rotation and translation for each height-matching instance
+    for(let instance of instances)
+    {
+        let centerOfRotation = [ 0, 0, 0 ];
+
+        // TODO
+
+        // rotate model sliding on the floor and find best fitting rotation
+        for(let deg = 0; i < 360; ++i)
+        {
+            let rotationMatrix = [ [], [], [], [] ]; // TODO
+            let translationVector = []; // TODO
+
+            let quality = 0; // TODO
+
+            if(quality > instance.quality)
+            {
+                instance.R = rotationMatrix;
+                instance.t = translationVector;
+                instance.quality = quality;
+            }
+        }
+    }
 
     return instances;
 };
