@@ -26,6 +26,7 @@ function distance(pointA, pointB)
     return Math.sqrt(sqrdDist);
 }
 
+/** divide points into clusters, whereas each cluster has a minimum distance between every other cluster of `minClusterDistance` */
 function cluster(minClusterDistance, points)
 {
     let clusters = [ { points: [ points[0] ] } ];
@@ -68,11 +69,29 @@ function cluster(minClusterDistance, points)
     return clusters;
 }
 
-/** @see https://de.wikipedia.org/wiki/Drehmatrix */
-function toRotationMatrix(rotationAxis, radiants)
+/** @see https://en.wikipedia.org/wiki/Rotation_matrix#Conversion_from_and_to_axis%E2%80%93angle */
+function toRotationMatrix(rotationAxis, rad)
 {
-    // TODO
-    return [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ];
+    let u = math.divide(rotationAxis, math.norm(rotationAxis));
+
+    return (
+    [
+        [
+            Math.cos(rad) + Math.pow(u[0], 2) * (1 - Math.cos(rad)),
+            u[0] * u[1] * (1 - Math.cos(rad)) - u[2] * Math.sin(rad),
+            u[0] * u[2] * (1 - Math.cos(rad)) + u[1] * Math.sin(rad)
+        ],
+        [
+            u[1] * u[0] * (1 - Math.cos(rad)) + u[2] * Math.sin(rad),
+            Math.cos(rad) + Math.pow(u[1], 2) * (1 - Math.cos(rad)),
+            u[1] * u[2] * (1 - Math.cos(rad)) - u[0] * Math.sin(rad)
+        ],
+        [
+            u[2] * u[0] * (1 - Math.cos(rad)) - u[1] * Math.sin(rad),
+            u[2] * u[1] * (1 - Math.cos(rad)) + u[0] * Math.sin(rad),
+            Math.cos(rad) + Math.pow(u[2], 2) * (1 - Math.cos(rad))
+        ]
+    ]);
 }
 
 /** @return the sum of all distances between each rotated model point and their closest correspondences in the scene */
@@ -101,7 +120,7 @@ function closestPointsDistanceSum(model, r, t, scene)
 }
 
 /** my baseline algorithm for object recognition */
-module.exports = async function(modelFile, sceneFile)
+module.exports = function(modelFile, sceneFile)
 {
     let model = new pcd.PcdFile(modelFile);
     let scene = new pcd.PcdFile(sceneFile);
@@ -124,20 +143,14 @@ module.exports = async function(modelFile, sceneFile)
     // find exact rotation and translation for each height-matching instance
     for(let instance of instances)
     {
-        let a = instance.centroid, b = [ /* TODO */ ];
-
-        let rotationAxis = // @see https://www.youtube.com/watch?v=NNdEZkvhxrc
-        [
-            0, // TODO
-            0,
-            0
-        ];
+        // calculate rotation matrix using two points in scene which should be in the same line parallel to the rotation axis
+        let rotationAxis = math.subtract([ .0163077, .0721388, -.293018 ], [ .0175788, .0785374, -.291012 ]);
 
         // rotate model sliding on the floor and find best fitting rotation
         for(let deg = 0; deg < 360; deg += 2)
         {
+            let translationVector = instance.centroid; // FIXME shift by centroid of model
             let rotationMatrix = toRotationMatrix(rotationAxis, Math.PI / 180 * deg);
-            let translationVector = [ 0, 0, 0 ]; // TODO
             let quality = 1 / closestPointsDistanceSum(model, rotationMatrix, translationVector, scene);
 
             if(quality > (instance.quality || 0))
