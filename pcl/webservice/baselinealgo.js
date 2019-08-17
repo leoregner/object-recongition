@@ -121,9 +121,8 @@ function closestPointsDistanceSum(model, r, t, scene)
 }
 
 /** my baseline algorithm for object recognition */
-module.exports = function(modelFile, sceneFile)
+module.exports = function(modelFile, sceneFile, angle = 45)
 {
-    let angle = 45; // degrees
     let model = new pcd.PcdFile(modelFile);
     let scene = new pcd.PcdFile(sceneFile);
 
@@ -138,22 +137,23 @@ module.exports = function(modelFile, sceneFile)
     for(let i = 0; i < scene.countPoints(); i += 5)
         if(isApproximatelyTheSame(highestPoint.coords[2], mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2])))
             clusterTops.push(scene.getPoint(i));
-    let instances = cluster(.10, clusterTops);
+    const instances = cluster(.10, clusterTops);
 
-    // TODO cut irrelevant points from scene for each instance to speed up the procedure
-
-    // calculate rotation axis using two points in scene which should be in the same line parallel to the rotation axis
-    const rotationAxis = math.subtract([ .0163077, .0721388, -.293018 ], [ .0175788, .0785374, -.291012 ]);
-    // FIXME shouldn't the rotation axis actually be othogonal to before-calculated axis?
+    // calculate rotation matrix for pre rotation around X axis to apply the view angle
+    let preRotation = (angle == 0) ? [ [ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ] ] : toRotationMatrix([ 1, 0, 0 ], Math.PI / 180 * angle);
 
     // find exact rotation and translation for each height-matching instance
     for(let instance of instances)
     {
-        // rotate model sliding on the floor and find best fitting rotation
+        // cut irrelevant points from scene for each instance to speed up the procedure
+        // TODO
+
+        // rotate model around Y axis (sliding on the floor) to find best fitting rotation
         for(let deg = 0; deg < 360; deg += 2)
         {
-            let translationVector = instance.centroid; // FIXME shift by centroid of model
-            let rotationMatrix = toRotationMatrix(rotationAxis, Math.PI / 180 * deg);
+            let rotationAxis = [ 0, 1, 0 ];
+            let translationVector = instance.centroid;
+            let rotationMatrix = math.multiply(/*toRotationMatrix(rotationAxis, Math.PI / 180 * deg)*/[ [ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ] ], preRotation);
             let quality = 1 / closestPointsDistanceSum(model, rotationMatrix, translationVector, scene);
 
             if(quality > (instance.quality || 0))
