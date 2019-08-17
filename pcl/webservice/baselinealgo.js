@@ -69,8 +69,7 @@ function cluster(minClusterDistance, points)
     return clusters;
 }
 
-/** @see https://en.wikipedia.org/wiki/Rotation_matrix#Conversion_from_and_to_axis%E2%80%93angle
-    @see https://math.stackexchange.com/questions/3233842/rotation-matrix-from-axis-angle-representation */
+/** @see https://en.wikipedia.org/wiki/Rotation_matrix#Conversion_from_and_to_axis%E2%80%93angle */
 function toRotationMatrix(rotationAxis, rad)
 {
     let u = math.divide(rotationAxis, math.norm(rotationAxis));
@@ -151,9 +150,8 @@ module.exports = function(modelFile, sceneFile, angle = 45)
         // rotate model around Y axis (sliding on the floor) to find best fitting rotation
         for(let deg = 0; deg < 360; deg += 2)
         {
-            let rotationAxis = [ 0, 1, 0 ];
-            let translationVector = instance.centroid;
-            let rotationMatrix = math.multiply(/*toRotationMatrix(rotationAxis, Math.PI / 180 * deg)*/[ [ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ] ], preRotation);
+            let translationVector = instance.centroid; // FIXME
+            let rotationMatrix = math.multiply(preRotation, toRotationMatrix([ 0, 1, 0 ], Math.PI / 180 * deg));
             let quality = 1 / closestPointsDistanceSum(model, rotationMatrix, translationVector, scene);
 
             if(quality > (instance.quality || 0))
