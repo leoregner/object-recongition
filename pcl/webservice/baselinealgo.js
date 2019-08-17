@@ -69,7 +69,8 @@ function cluster(minClusterDistance, points)
     return clusters;
 }
 
-/** @see https://en.wikipedia.org/wiki/Rotation_matrix#Conversion_from_and_to_axis%E2%80%93angle */
+/** @see https://en.wikipedia.org/wiki/Rotation_matrix#Conversion_from_and_to_axis%E2%80%93angle
+    @see https://math.stackexchange.com/questions/3233842/rotation-matrix-from-axis-angle-representation */
 function toRotationMatrix(rotationAxis, rad)
 {
     let u = math.divide(rotationAxis, math.norm(rotationAxis));
@@ -122,6 +123,7 @@ function closestPointsDistanceSum(model, r, t, scene)
 /** my baseline algorithm for object recognition */
 module.exports = function(modelFile, sceneFile)
 {
+    let angle = 45; // degrees
     let model = new pcd.PcdFile(modelFile);
     let scene = new pcd.PcdFile(sceneFile);
 
@@ -134,18 +136,19 @@ module.exports = function(modelFile, sceneFile)
     // find (clusters of) points with same height in scene and assume that there's an instance
     let clusterTops = [];
     for(let i = 0; i < scene.countPoints(); i += 5)
-        if(isApproximatelyTheSame(highestPoint.coords[2], mapDepthToFloor(45, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2])))
+        if(isApproximatelyTheSame(highestPoint.coords[2], mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2])))
             clusterTops.push(scene.getPoint(i));
     let instances = cluster(.10, clusterTops);
 
     // TODO cut irrelevant points from scene for each instance to speed up the procedure
 
+    // calculate rotation axis using two points in scene which should be in the same line parallel to the rotation axis
+    const rotationAxis = math.subtract([ .0163077, .0721388, -.293018 ], [ .0175788, .0785374, -.291012 ]);
+    // FIXME shouldn't the rotation axis actually be othogonal to before-calculated axis?
+
     // find exact rotation and translation for each height-matching instance
     for(let instance of instances)
     {
-        // calculate rotation matrix using two points in scene which should be in the same line parallel to the rotation axis
-        let rotationAxis = math.subtract([ .0163077, .0721388, -.293018 ], [ .0175788, .0785374, -.291012 ]);
-
         // rotate model sliding on the floor and find best fitting rotation
         for(let deg = 0; deg < 360; deg += 2)
         {
