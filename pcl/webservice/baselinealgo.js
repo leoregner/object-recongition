@@ -3,15 +3,15 @@ const pcd = require('./pcd.js'), math = require('mathjs');
 /** @return whether the given values are approximately the same */
 function isApproximatelyTheSame(reference, value)
 {
-    const tolerance = 2; // per cent
+    const tolerance = 2; // per cent - subject to fine-tuning
     return value > reference * (1 - tolerance / 100) && value < reference * (1 + tolerance / 100);
 }
 
 /** @see copy of same function in pointcloud.js */
 function mapDepthToFloor(angle, x, y, depth)
 {
-    if(angle == 0)
-        return depth + .19;
+    if(angle == 90)
+        return depth + .193;
 
     if(angle == 45)
         return .0307012186 * x + .8044191429 * y + .8287873915 * depth + .19;
@@ -98,7 +98,7 @@ function closestPointsDistanceSum(model, r, t, scene)
 {
     let distanceSum = 0;
 
-    // select points as features and determine their distance to scene
+    // select some points of the model as features and determine their distances to the corresponding points in the scene
     for(let i = 0; i < model.countPoints(); i += 100)
     {
         const translated = math.add(math.multiply(r, model.getPoint(i)), t);
@@ -121,20 +121,26 @@ function closestPointsDistanceSum(model, r, t, scene)
 /** my baseline algorithm for object recognition */
 module.exports = function(modelFile, sceneFile, angle = 45)
 {
-    let model = new pcd.PcdFile(modelFile);
-    let scene = new pcd.PcdFile(sceneFile);
+    const model = new pcd.PcdFile(modelFile);
+    const scene = new pcd.PcdFile(sceneFile);
 
-    // find highest point in model
+    // find highest point in model (i.e. largest Y value)
     let highestPoint = null;
     for(let i = 0; i < model.countPoints(); ++i)
-        if(highestPoint == null || model.getPoint(i)[2] > highestPoint.coords[2])
+        if(highestPoint == null || model.getPoint(i)[1] > highestPoint.coords[1])
             highestPoint = { i, coords: model.getPoint(i) };
 
-    // find (clusters of) points with same height in scene and assume that there's an instance
+    // find points with same height in scene and assume that there's an instance
     let clusterTops = [];
     for(let i = 0; i < scene.countPoints(); i += 5)
-        if(isApproximatelyTheSame(highestPoint.coords[2], mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2])))
+        if(isApproximatelyTheSame(highestPoint.coords[1], mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2])))
             clusterTops.push(scene.getPoint(i));
+
+    // if no points have been found, no instances exist
+    if(clusterTops.length == 0)
+        return [];
+
+    // if occurences have been found, cluster them to find possible instance locations
     const instances = cluster(.10, clusterTops);
 
     // calculate rotation matrix for pre rotation around X axis to apply the view angle
@@ -149,8 +155,12 @@ module.exports = function(modelFile, sceneFile, angle = 45)
         // rotate model around Y axis (sliding on the floor) to find best fitting rotation
         for(let deg = 0; deg < 360; deg += 2)
         {
-            let translationVector = math.subtract(instance.centroid, highestPoint.coords);
             let rotationMatrix = math.multiply(preRotation, toRotationMatrix([ 0, 1, 0 ], Math.PI / 180 * deg));
+
+            let rotatedHighestPoint = math.multiply(rotationMatrix, highestPoint.coords);
+            let translationVector = math.subtract(instance.centroid, rotatedHighestPoint);
+
+            // calculate quality of instance translation and rotation by using the sum of distances between all model points and their closest scene points
             let quality = 1 / closestPointsDistanceSum(model, rotationMatrix, translationVector, scene);
 
             if(quality > (instance.quality || 0))
@@ -165,6 +175,10 @@ module.exports = function(modelFile, sceneFile, angle = 45)
         delete instance.points;
         delete instance.centroid;
     }
+
+    // BEGIN to delete
+    console.log('highest point: ', highestPoint.coords);
+    // END to delete
 
     return instances;
 };
