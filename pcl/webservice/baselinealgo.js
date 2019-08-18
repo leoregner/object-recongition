@@ -35,8 +35,7 @@ function cluster(minClusterDistance, points)
     // points go in the cluster, which has a member point less than `minClusterDistance` away
     while(points.length > 0)
     {
-        outter:
-        for(let k = 0; k < points.length; ++k)
+        outter: for(let k = 0; k < points.length; ++k)
             for(let i = 0; i < clusters.length; ++i)
                 for(let j = 0; j < clusters[i].points.length; ++j)
                     if(distance(clusters[i].points[j], points[k]) < minClusterDistance)
@@ -150,7 +149,7 @@ module.exports = function(modelFile, sceneFile, angle = 45)
         // rotate model around Y axis (sliding on the floor) to find best fitting rotation
         for(let deg = 0; deg < 360; deg += 2)
         {
-            let translationVector = instance.centroid; // FIXME
+            let translationVector = math.subtract(instance.centroid, highestPoint.coords);
             let rotationMatrix = math.multiply(preRotation, toRotationMatrix([ 0, 1, 0 ], Math.PI / 180 * deg));
             let quality = 1 / closestPointsDistanceSum(model, rotationMatrix, translationVector, scene);
 
@@ -162,7 +161,7 @@ module.exports = function(modelFile, sceneFile, angle = 45)
             }
         }
 
-        // to save bandwith, delete instance properties that are no longer needed
+        // to save bandwith, remove instance properties that are no longer needed
         delete instance.points;
         delete instance.centroid;
     }
