@@ -128,7 +128,23 @@ module.exports = function(modelFile, sceneFile, angle = 45)
     let highestPoint = null;
     for(let i = 0; i < model.countPoints(); ++i)
         if(highestPoint == null || model.getPoint(i)[1] > highestPoint.coords[1])
-            highestPoint = { i, coords: model.getPoint(i) };
+            highestPoint = { i, coords: model.getPoint(i), sameHeightPoints: [] };
+        else if(highestPoint != null && model.getPoint(i)[1] == highestPoint.coords[1])
+            highestPoint.sameHeightPoints.push(model.getPoint(i));
+
+    // if there are multiple highest points, calculate average to get the center of the cluster
+    if(highestPoint.sameHeightPoints.length > 0)
+    {
+        let x = highestPoint.coords[0], z = highestPoint.coords[2];
+
+        for(let colleaguePoint of highestPoint.sameHeightPoints)
+        {
+            x += colleaguePoint[0];
+            z += colleaguePoint[2];
+        }
+
+        highestPoint = { coords: [ x / (highestPoint.sameHeightPoints.length + 1), highestPoint.coords[1], z / (highestPoint.sameHeightPoints.length + 1) ] };
+    }
 
     // find points with same height in scene and assume that there's an instance
     let clusterTops = [];
