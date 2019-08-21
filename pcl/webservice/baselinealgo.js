@@ -119,7 +119,7 @@ function closestPointsDistanceSum(model, r, t, scene)
 }
 
 /** my baseline algorithm for object recognition */
-module.exports = function(modelFile, sceneFile, angle = 45)
+module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance = .02)
 {
     const model = new pcd.PcdFile(modelFile);
     const scene = new pcd.PcdFile(sceneFile);
@@ -157,7 +157,7 @@ module.exports = function(modelFile, sceneFile, angle = 45)
         return [];
 
     // if occurences have been found, cluster them to find possible instance locations
-    const instances = cluster(.10, clusterTops);
+    const instances = cluster(minClusterDistance, clusterTops);
 
     // calculate rotation matrix for pre rotation around X axis to apply the view angle
     let preRotation = (angle == 0) ? [ [ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ] ] : toRotationMatrix([ 1, 0, 0 ], Math.PI / 180 * angle);
