@@ -4,7 +4,8 @@ const bla = require('./baselinealgo.js');
 {
     let timeBefore = new Date().getTime();
     //let result = await bla('example_models/model5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/scene_300frames.pcd");
-    let result = await bla('example_models/model5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/scene_o.pcd", 90);
+    let result = await bla('example_models/model5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/scene_o.pcd", 90);// perfect
+    //let result = await bla('example_models/ring5000x90.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/scene_o.pcd", 90);// perfect
     let timeAfter = new Date().getTime();
 
     console.log(JSON.stringify(result));

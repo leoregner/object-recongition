@@ -169,10 +169,9 @@ module.exports = function(modelFile, sceneFile, angle = 45)
         // TODO
 
         // rotate model around Y axis (sliding on the floor) to find best fitting rotation
-        for(let deg = 0; deg < 360; deg += 2)
+        const determineQualityFor = function(instance, deg)
         {
             let rotationMatrix = math.multiply(preRotation, toRotationMatrix([ 0, 1, 0 ], Math.PI / 180 * deg));
-
             let rotatedHighestPoint = math.multiply(rotationMatrix, highestPoint.coords);
             let translationVector = math.subtract(instance.centroid, rotatedHighestPoint);
 
@@ -181,20 +180,22 @@ module.exports = function(modelFile, sceneFile, angle = 45)
 
             if(quality > (instance.quality || 0))
             {
+                instance.deg = deg;
                 instance.R = rotationMatrix;
                 instance.t = translationVector;
                 instance.quality = quality;
             }
-        }
+        };
 
-        // to save bandwith, remove instance properties that are no longer needed
+        // optimize number of comparisons when rotation around Y axis
+        for(let deg = 0; deg < 360; deg += 12) determineQualityFor(instance, deg);
+        for(let basis = instance.deg, deg = instance.deg - 11; deg <= basis + 11; deg == basis - 1 ? deg += 2 : ++deg) determineQualityFor(instance, deg);
+
+        // to save memory and bandwith, remove instance properties that are no longer needed
+        delete instance.deg;
         delete instance.points;
         delete instance.centroid;
     }
-
-    // BEGIN to delete
-    console.log('highest point: ', highestPoint.coords);
-    // END to delete
 
     return instances;
 };
