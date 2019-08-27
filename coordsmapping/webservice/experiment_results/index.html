@@ -28,10 +28,22 @@
     <body>
         <div id="app">
             <nav>
-                <ul v-for="parameter in parameters">
-                    <a href="#" v-on:click="chosen(parameter)">
-                        {{ parameter }}
-                    </a>
+                <ul>
+                    <li v-for="parameter in parameters">
+                        <a href="#" v-on:click="chosen(parameter)">
+                            {{ parameter }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="data/ta.csv">
+                            ta.csv
+                        </a>
+                    </li>
+                    <li>
+                        <a href="data/cg.csv">
+                            cg.csv
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <main>

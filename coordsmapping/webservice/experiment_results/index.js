@@ -11,12 +11,13 @@ module.exports = async function(req, res, next)
 
         db.serialize(function()
         {
-            let errors = `(select algo, model, frames, duration, calgo,
-                           modelss, sceness, rfrad, descrrad, cgsize, cgtresh as cgthresh,
+            let errors = `(select algo, model, frames, duration, ifnull(calgo, 'Hough') as calgo,
+                           ifnull(modelss, 0.001) as modelss, ifnull(sceness, 0.001) as sceness, ifnull(rfrad, 0.015) as rfrad,
+                           ifnull(descrrad, 0.02) as descrrad, ifnull(cgsize, 0.01) as cgsize, ifnull(cgtresh, 5.0) as cgthresh,
                            bestfiness as bestfitness, (targetx1 - actualx1) * (targetx1 - actualx1) + (targety1 - actualy1) *
                            (targety1 - actualy1) + (targetz1 - actualz1) * (targetz1 - actualz1) + (targetx2 - actualx2) *
                            (targetx2 - actualx2) + (targety2 - actualy2) * (targety2 - actualy2) + (targetz2 - actualz2) *
-                           (targetz2 - actualz2) as error from measurements) errors`; // TODO null = default value
+                           (targetz2 - actualz2) as error from measurements) errors`;
 
             db.send = function(sql)
             {
@@ -28,6 +29,40 @@ module.exports = async function(req, res, next)
                         res.send({ success: false, error })
                     }
                     else res.send(results);
+                });
+            };
+
+            db.csv = function(sql)
+            {
+                this.all(sql, function(error, results)
+                {
+                    if(error)
+                    {
+                        console.error(error);
+                        res.send('error;' + error);
+                    }
+
+                    else // send as CSV
+                    {
+                        let data = '';// "sep=;\r\n";
+
+                        if(results.length > 0)
+                        {
+                            for(let header of Object.keys(results[0]))
+                                data += header + ';';
+                            data += "\r\n";
+                        }
+
+                        for(let result of results)
+                        {
+                            for(let field of Object.values(result))
+                                data += field + ';';
+                            data += "\r\n";
+                        }
+
+                        res.set('Content-Type', 'text/csv; charset=utf8');
+                        res.send(data);
+                    }
                 });
             };
 
@@ -66,6 +101,12 @@ module.exports = async function(req, res, next)
 
             else if(req.url.indexOf('/cgthresh.json') > -1)
                 db.send(`select cgthresh, avg(error) error, avg(duration) duration from ${errors} where cgthresh is not null and cgthresh > 0 group by cgthresh order by cgthresh`);
+
+            else if(req.url.indexOf('/ta.csv') > -1)
+                db.csv(`select algo, model, frames, duration, error from ${errors} where algo = 'ta'`);
+
+            else if(req.url.indexOf('/cg.csv') > -1)
+                db.csv(`select * from ${errors} where algo = 'cg'`);
 
             else next();
         });
