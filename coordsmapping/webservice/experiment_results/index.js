@@ -103,10 +103,10 @@ module.exports = async function(req, res, next)
                 db.send(`select cgthresh, avg(error) error, avg(duration) duration from ${errors} where cgthresh is not null and cgthresh > 0 group by cgthresh order by cgthresh`);
 
             else if(req.url.indexOf('/ta.csv') > -1)
-                db.csv(`select algo, model, frames, duration, error from ${errors} where algo = 'ta'`);
+                db.csv(`select algo, model, frames, bestfitness, duration, error from ${errors} where algo = 'ta'`);
 
             else if(req.url.indexOf('/cg.csv') > -1)
-                db.csv(`select * from ${errors} where algo = 'cg'`);
+                db.csv(`select * from ${errors} where algo = 'cg' and error is not null`);
 
             else next();
         });
