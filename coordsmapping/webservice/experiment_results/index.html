@@ -92,6 +92,8 @@
                             }
                         ];
 
+                        let ticks = { beginAtZero: true, fontSize: 18 };
+
                         config.options =
                         {
                             responsive: true,
@@ -106,8 +108,8 @@
                                 xAxes: [ { display: true, scaleLabel: { display: false, labelString: 'parameter value' } } ],
                                 yAxes:
                                 [
-                                    { id: 'errorAxis', display: true, scaleLabel: { display: true, labelString: 'error' }, ticks: { beginAtZero: true } },
-                                    { id: 'durationAxis', display: true, scaleLabel: { display: true, labelString: 'duration' }, ticks: { beginAtZero: true } }
+                                    { id: 'errorAxis', display: true, scaleLabel: { display: true, labelString: 'error' }, ticks },
+                                    { id: 'durationAxis', display: true, scaleLabel: { display: true, labelString: 'duration' }, ticks }
                                 ]
                             }
                         };
