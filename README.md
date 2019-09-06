@@ -14,12 +14,18 @@ This project has been configured to automatically deploy changes of the `master`
 --->
 ![Build Status](https://gitlab.leoregner.eu/leoregner/master-thesis/badges/master/build.svg)
 
-## Start
+# Dependencies, Libraries & Frameworks
+TODO - list all third party software, there licenses and successfully tested version numbers
+
+# Start
+Using [Docker](https://www.docker.com/), the dependencies are installed automatically.
+All process tasks are deployed as web services in separate Docker containers.
+
 ```bash
 docker-compose up -d --build
 ```
 
-# Launch Process
+## Launch Process
 Navigate to the HTTP port of the [process engine](http://processengine.thesis.leoregner.eu/) and drop the following JSON process model:
 
 ```json

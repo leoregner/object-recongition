@@ -28,7 +28,7 @@ async function experiment()
                 targetz1: 0.000,
 
                 point2: 1316, // opposite base corner
-                targetx2: 0.000 + .020,
+                targetx2: 0.050 + .020,
                 targety2: 0.045 + .080,
                 targetz2: 1.000
             },
