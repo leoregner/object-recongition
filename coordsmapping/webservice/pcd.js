@@ -84,9 +84,9 @@ class PcdFile
         if(this.headers['DATA'] == 'binary')
         {
             let offset = this.headerSize + i * this.pointSize;
-            let x = this.buffer.readFloatLE(offset + this.inPointOffsetX); // TODO not necessarily float with four bytes
-            let y = this.buffer.readFloatLE(offset + this.inPointOffsetY); // TODO not necessarily float with four bytes
-            let z = this.buffer.readFloatLE(offset + this.inPointOffsetZ); // TODO not necessarily float with four bytes
+            let x = this.buffer.readFloatLE(offset + this.inPointOffsetX);
+            let y = this.buffer.readFloatLE(offset + this.inPointOffsetY);
+            let z = this.buffer.readFloatLE(offset + this.inPointOffsetZ);
             return [ x, y, z ];
         }
 
