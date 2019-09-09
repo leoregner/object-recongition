@@ -3,7 +3,8 @@ const pcd = require('./pcd.js'), math = require('mathjs');
 /** @return whether the given values are approximately the same */
 function isApproximatelyTheSame(reference, value)
 {
-    const tolerance = 10; // per cent - subject to fine-tuning
+    //const tolerance = 5; // per cent - subject to fine-tuning
+    const tolerance = .005 / reference * 100; // 5 mm
     return value > reference * (1 - tolerance / 100) && value < reference * (1 + tolerance / 100);
 }
 
@@ -11,7 +12,7 @@ function isApproximatelyTheSame(reference, value)
 function mapDepthToFloor(angle, x, y, depth, cameraHeight)
 {
     if(angle == 90)
-        return depth + cameraHeight + .003;
+        return depth + cameraHeight;
 
     if(angle == 45)
         return .0307012186 * x + .8044191429 * y + .8287873915 * depth + cameraHeight + .003;

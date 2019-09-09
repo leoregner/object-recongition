@@ -1,11 +1,9 @@
-const express = require('express'), ps = require('child_process'), fileUpload = require('express-fileupload'), fs = require('fs');
+const express = require('express'), ps = require('child_process'), fs = require('fs');
 const pcd = require('./pcd.js'), map = require('./map.js'), math = require('mathjs');
-const uuidv4 = () => new Date().getTime() + (Math.random() + '').substring(2);
 
 // create web app server instance
 const app = express();
-app.use(fileUpload({ useTempFiles: true, tempFileDir: '/tmp/' }));
-app.use(require('body-parser').urlencoded({ extended: false }));
+app.use(require('multer')().single());
 app.listen(8080);
 
 // use await-able async exec function instead of execSync to avoid server blocking while executing
@@ -37,37 +35,38 @@ app.use(function(req, res, next)
 // graphical representation of experiment data
 app.get('/experiment_results/*', require('./experiment_results/index.js'));
 
-//
-app.post('/grab', async function(req, res)
+// calculate coordinates for Universal Robot
+app.post('/coords', async function(req, res)
 {
     res.header('Content-Type', 'application/json');
 
     try
     {
-        const id = uuidv4();
-        if(req.files.model) await exec('mv "' + req.files['model'].tempFilePath + '" /tmp/in_' + id + '_model.pcd');console.log('/tmp/in_'+id+'_model.pcd');
-        const model = new pcd.PcdFile('/tmp/in_' + id + '_model.pcd');
-
         const instances = JSON.parse(req.body.recognition);
+        let bestInstance = { quality: 0 };
 
-        let instance = instances[0]; // TODO
+        if(instances.length > 0)
+        {
+            for(let instance of instances)
+                if(instance.quality > bestInstance.quality)
+                    bestInstance = instance;
+        }
+        else throw 'no instances provided';
 
-        let x = instance.t[0];
-        let y = instance.t[1];
-        let z = instance.t[2] + .005;
+        let x = bestInstance.t[0];
+        let y = bestInstance.t[1];
+        let z = bestInstance.t[2] + .005;
 
-        let p1 = [ -0.015757733955979347, 0.031741950660943985, 0 ];//model.getPoint(req.query.p1);
-        p1 = math.add(math.multiply(instance.R, p1), instance.t);
-
-        let p2 = [ 0.01548727136105299, 0.03200000151991844, 0.00013623380800709128 ];//model.getPoint(req.query.p2);
-        p2 = math.add(math.multiply(instance.R, p2), instance.t);
+        let p1 = math.add(math.multiply(bestInstance.R, [ 0, 0, 0 ]), bestInstance.t);
+        let p2 = math.add(math.multiply(bestInstance.R, [ 1, 1, 1 ]), bestInstance.t);
 
         let deltaX = p2[0] - p1[0];
         let deltaY = p2[1] - p1[1];
-        let phi = -Math.atan(deltaX / deltaY) + Math.PI / 2;
+        let deltaZ = p2[2] - p1[2];
+        let phi = Math.atan(deltaY / deltaX);
 
         console.log(p1, p2);
-        res.send({ x, y, z, phi }); // TODO move robot arm
+        res.send({ x, y, z, phi });
     }
     catch(x)
     {
