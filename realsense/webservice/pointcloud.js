@@ -6,15 +6,15 @@
 
 const rs2 = require('node-librealsense'), fs = require('fs');
 
-module.exports = function(fileName, numberOfFrames = 100)
+module.exports = function(fileName, numberOfFrames = 100, settings = {})
 {
-    const resolutionWidth = 848; // px
-    const resolutionHeight = 480; // px
+    const resolutionWidth = settings.resolutionWidth || 848; // px
+    const resolutionHeight = settings.resolutionHeight || 480; // px
 
-    const maxSideOffset = 0.20; //meters
-    const legoStructureAngle = 45; // deg
-    const minDistanceThreshold = 0.10; // meters
-    const maxDistanceThreshold = 0.185; // meters
+    const maxSideOffset = settings.maxSideOffset || 0.20; //meters
+    const minDistanceThreshold = settings.minDistanceThreshold || 0.10; // meters
+    const maxDistanceThreshold = settings.maxDistanceThreshold || 0.185; // meters
+    const legoStructureAngle = settings.legoStructureAngle === 0 ? 0 : (settings.legoStructureAngle || 45); // deg
 
     const config = new rs2.Config();
     config.enableStream(rs2.stream.stream_color, -1, resolutionWidth, resolutionHeight, rs2.format.format_any, 30);

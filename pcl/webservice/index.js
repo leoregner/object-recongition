@@ -78,6 +78,7 @@ app.post('/cg', async function(req, res)
     }
     catch(x)
     {
+        console.error(x);
         res.send({ error: x });
     }
 });
@@ -104,6 +105,7 @@ app.post('/ta', async function(req, res)
     }
     catch(x)
     {
+        console.error(x);
         res.send({ error: x });
     }
 });
@@ -123,6 +125,10 @@ app.post('/bl', async function(req, res)
         if(req.files.scene) await exec('mv "' + req.files['scene'].tempFilePath + '" in_' + id + '/scene.obj');
         await exec('build/converter "in_' + id + '/scene.obj" "in_' + id + '/scene.pcd"');
 
+        let angle = req.query.angle || 45; // degrees
+        let cameraHeight = req.query.height || .19; // meters
+        let minClusterDistance = 0.02; // meters
+
         // execute base line algorithm
         let json = await require('./baselinealgo.js')('in_' + id + '/model.pcd', 'in_' + id + '/scene.pcd');
         res.send(json);
@@ -130,6 +136,7 @@ app.post('/bl', async function(req, res)
     }
     catch(x)
     {
+        console.error(x);
         res.send({ error: x });
     }
 });

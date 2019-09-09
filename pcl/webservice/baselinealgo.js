@@ -3,18 +3,18 @@ const pcd = require('./pcd.js'), math = require('mathjs');
 /** @return whether the given values are approximately the same */
 function isApproximatelyTheSame(reference, value)
 {
-    const tolerance = 2; // per cent - subject to fine-tuning
+    const tolerance = 10; // per cent - subject to fine-tuning
     return value > reference * (1 - tolerance / 100) && value < reference * (1 + tolerance / 100);
 }
 
 /** @see copy of same function in pointcloud.js */
-function mapDepthToFloor(angle, x, y, depth)
+function mapDepthToFloor(angle, x, y, depth, cameraHeight)
 {
     if(angle == 90)
-        return depth + .193;
+        return depth + cameraHeight + .003;
 
     if(angle == 45)
-        return .0307012186 * x + .8044191429 * y + .8287873915 * depth + .19;
+        return .0307012186 * x + .8044191429 * y + .8287873915 * depth + cameraHeight + .003;
 
     throw 'depth mapping not defined for an angle of ' + angle + ' degrees';
 }
@@ -119,7 +119,7 @@ function closestPointsDistanceSum(model, r, t, scene)
 }
 
 /** my baseline algorithm for object recognition */
-module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance = .02)
+module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance = .02, camHeight = .19)
 {
     const model = new pcd.PcdFile(modelFile);
     const scene = new pcd.PcdFile(sceneFile);
@@ -149,7 +149,7 @@ module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance =
     // find points with same height in scene and assume that there's an instance
     let clusterTops = [];
     for(let i = 0; i < scene.countPoints(); i += 5)
-        if(isApproximatelyTheSame(highestPoint.coords[1], mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2])))
+        if(isApproximatelyTheSame(highestPoint.coords[1], mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2], camHeight)))
             clusterTops.push(scene.getPoint(i));
 
     // if no points have been found, no instances exist
