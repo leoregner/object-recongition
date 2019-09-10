@@ -1,5 +1,6 @@
 #!/bin/bash
-cd realsense && npm install -y && (nohup node index.js > output.log &); cd ..
-cd pcl && npm install -y && (nohup node index.js > output.log &); cd ..
-cd coordsmapping && npm install -y && (nohup node index.js > output.log &); cd ..
-cd robot && npm install -y && (nohup node index.js > output.log &); cd ..
+cd realsense/webservice && npm install -y && (nohup node index.js > output.log &); cd ../..
+cd pcl/webservice && npm install -y && (nohup node index.js > output.log &); cd ../..
+cd coordsmapping/webservice && npm install -y && (nohup node index.js > output.log &); cd ../..
+cd robot/webservice && npm install -y && (nohup node index.js > output.log &); cd ../..
+echo;

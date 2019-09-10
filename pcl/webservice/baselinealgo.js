@@ -3,7 +3,7 @@ const pcd = require('./pcd.js'), math = require('mathjs');
 /** @return whether the given values are approximately the same */
 function isApproximatelyTheSame(reference, value)
 {
-    //const tolerance = 5; // per cent - subject to fine-tuning
+    //const tolerance = 2; // per cent - subject to fine-tuning
     const tolerance = .005 / reference * 100; // 5 mm
     return value > reference * (1 - tolerance / 100) && value < reference * (1 + tolerance / 100);
 }
