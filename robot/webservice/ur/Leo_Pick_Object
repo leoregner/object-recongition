@@ -1,0 +1,187 @@
+<URProgram name="Leo_Pick_Object" installation="default" installationRelativePath="../../programs/default" directory="/programs/../media/urmountpoint_AbYnJc" createdIn="5.3.1.64192" lastSavedIn="5.3.1.64192" robotSerialNumber="20185000593" crcValue="2449111927">
+  <kinematics status="LINEARIZED" validChecksum="true">
+    <deltaTheta value="4.976784701165877E-7, -0.03036359268043371, 6.66093775910508, -0.3473907878626234, -1.7958261937234266E-7, -4.2615156216341266E-8"/>
+    <a value="-1.4903181642292342E-5, -0.611668166781447, -0.5371414427192993, 3.630886410015674E-5, 1.482624161494541E-4, 0.0"/>
+    <d value="0.18096737605106775, 7.457880982150861, 61.14649270690509, -68.43122284105856, 0.11990981481938537, 0.11557464444585912"/>
+    <alpha value="1.5697993157816121, -0.0024909907899792446, 0.002834875712499415, 1.5706222368257288, -1.5706400961204785, 0.0"/>
+    <jointChecksum value="-1490501265, -1839338937, 827941847, -1774796201, -1774699959, -1775701417"/>
+  </kinematics>
+  <children>
+    <SpecialSequence type="BeforeStart">
+      <children>
+        <Assignment valueSource="Expression">
+          <variable name="matrix" prefersPersistentValue="false">
+            <initializeExpression/>
+          </variable>
+          <expression>
+            <ExpressionChar character="p"/>
+            <ExpressionChar character="["/>
+            <ExpressionChar character="x"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="y"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="z"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="r"/>
+            <ExpressionChar character="x"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="r"/>
+            <ExpressionChar character="y"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="r"/>
+            <ExpressionChar character="z"/>
+            <ExpressionChar character="]"/>
+          </expression>
+        </Assignment>
+        <Assignment valueSource="Expression">
+          <variable name="D435_pos" prefersPersistentValue="false">
+            <initializeExpression/>
+          </variable>
+          <expression>
+            <ExpressionToken token="get_actual_tcp_pose"/>
+            <ExpressionChar character="("/>
+            <ExpressionChar character=")"/>
+          </expression>
+        </Assignment>
+        <Assignment valueSource="Expression">
+          <variable name="kamera_tcp_AG" prefersPersistentValue="false">
+            <initializeExpression/>
+          </variable>
+          <expression>
+            <ExpressionChar character="p"/>
+            <ExpressionChar character="["/>
+            <ExpressionChar character="0"/>
+            <ExpressionChar character="."/>
+            <ExpressionChar character="1"/>
+            <ExpressionChar character="6"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="0"/>
+            <ExpressionChar character="."/>
+            <ExpressionChar character="0"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="0"/>
+            <ExpressionChar character="."/>
+            <ExpressionChar character="0"/>
+            <ExpressionChar character="5"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="0"/>
+            <ExpressionChar character=","/>
+            <ExpressionToken token="d2r"/>
+            <ExpressionChar character="("/>
+            <ExpressionChar character="4"/>
+            <ExpressionChar character="5"/>
+            <ExpressionChar character=")"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character="0"/>
+            <ExpressionChar character="]"/>
+          </expression>
+        </Assignment>
+      </children>
+    </SpecialSequence>
+    <MainProgram runOnlyOnce="true" InitVariablesNode="false">
+      <children>
+        <Assignment valueSource="Expression">
+          <variable name="AG_pose" prefersPersistentValue="false">
+            <initializeExpression/>
+          </variable>
+          <expression>
+            <ExpressionToken token="pose_add"/>
+            <ExpressionChar character="("/>
+            <ExpressionChar character="D"/>
+            <ExpressionChar character="4"/>
+            <ExpressionChar character="3"/>
+            <ExpressionChar character="5"/>
+            <ExpressionChar character="_"/>
+            <ExpressionChar character="p"/>
+            <ExpressionChar character="o"/>
+            <ExpressionChar character="s"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character=" "/>
+            <ExpressionChar character="k"/>
+            <ExpressionChar character="a"/>
+            <ExpressionChar character="m"/>
+            <ExpressionChar character="e"/>
+            <ExpressionChar character="r"/>
+            <ExpressionChar character="a"/>
+            <ExpressionChar character="_"/>
+            <ExpressionChar character="t"/>
+            <ExpressionChar character="c"/>
+            <ExpressionChar character="p"/>
+            <ExpressionChar character="_"/>
+            <ExpressionChar character="A"/>
+            <ExpressionChar character="G"/>
+            <ExpressionChar character=")"/>
+          </expression>
+        </Assignment>
+        <Move motionType="MoveJ" speed="1.0471975511965976" acceleration="1.3962634015954636" useActiveTCP="true" positionType="CartesianPose">
+          <feature class="GeomFeatureReference" referencedName="Joint_0_name"/>
+          <children>
+            <Waypoint type="Variable" name="Waypoint" kinematicsFlags="3">
+              <motionParameters/>
+              <variable name="AG_pose" prefersPersistentValue="false">
+                <initializeExpression/>
+              </variable>
+            </Waypoint>
+          </children>
+        </Move>
+        <Assignment valueSource="Expression">
+          <variable name="part" prefersPersistentValue="false">
+            <initializeExpression/>
+          </variable>
+          <expression>
+            <ExpressionToken token="pose_add"/>
+            <ExpressionChar character="("/>
+            <ExpressionChar character="A"/>
+            <ExpressionChar character="G"/>
+            <ExpressionChar character="_"/>
+            <ExpressionChar character="p"/>
+            <ExpressionChar character="o"/>
+            <ExpressionChar character="s"/>
+            <ExpressionChar character="e"/>
+            <ExpressionChar character=","/>
+            <ExpressionChar character=" "/>
+            <ExpressionChar character="m"/>
+            <ExpressionChar character="a"/>
+            <ExpressionChar character="t"/>
+            <ExpressionChar character="r"/>
+            <ExpressionChar character="i"/>
+            <ExpressionChar character="x"/>
+            <ExpressionChar character=")"/>
+          </expression>
+        </Assignment>
+        <Move motionType="MoveJ" speed="1.0471975511965976" acceleration="1.3962634015954636" useActiveTCP="true" positionType="CartesianPose">
+          <feature class="GeomFeatureReference" reference="../../Move/feature"/>
+          <children>
+            <Waypoint type="Variable" name="Waypoint" kinematicsFlags="-1">
+              <motionParameters/>
+              <variable name="part" prefersPersistentValue="false">
+                <initializeExpression/>
+              </variable>
+            </Waypoint>
+          </children>
+        </Move>
+        <Contributed strategyClass="com.robotiq.urcap.gripper.GripperNode" strategyProgramNodeType="Gripper" strategyURCapDeveloper="Robotiq Inc." strategyURCapName="Robotiq_Grippers">
+          <dataModel>
+            <data key="position" value="100.0"/>
+            <data key="force" value="10.0"/>
+            <data key="speed" value="10.0"/>
+            <data key="positionInDouble" value="100.0"/>
+            <data key="forceInDouble" value="10.0"/>
+            <data key="speedInDouble" value="10.0"/>
+            <data key="slaveIds" value="[9]"/>
+            <data key="blocking" value="true"/>
+          </dataModel>
+        </Contributed>
+        <Move motionType="MoveJ" speed="1.0471975511965976" acceleration="1.3962634015954636" useActiveTCP="true" positionType="CartesianPose">
+          <feature class="GeomFeatureReference" reference="../../Move/feature"/>
+          <children>
+            <Waypoint type="Variable" name="Waypoint" kinematicsFlags="3">
+              <motionParameters/>
+              <variable featureName="Leo_D435_180Pos"/>
+            </Waypoint>
+          </children>
+        </Move>
+      </children>
+    </MainProgram>
+  </children>
+</URProgram>

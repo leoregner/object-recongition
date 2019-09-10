@@ -68,7 +68,8 @@ var secureContextualEval = function(js, context, scope)
 {
     new Function(js); // throws exception if code is not valid
 
-    let globalScope = window, newGlobalScopeVarNames = [ 'arguments' ], newGlobalScopeVarValues = [ undefined ];
+	let sleepFunction = function(duration) { return new Promise(function(resolve, reject) { setTimeout(resolve, duration) }) };
+    let globalScope = window, newGlobalScopeVarNames = [ 'arguments', 'sleep' ], newGlobalScopeVarValues = [ undefined, sleepFunction ];
 
     if(scope) for(let key in scope) if(newGlobalScopeVarNames.indexOf(key) <= -1)
     {

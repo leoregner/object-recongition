@@ -1,29 +1,9 @@
-const express = require('express'), ps = require('child_process'), fs = require('fs');
-const pcd = require('./pcd.js'), map = require('./map.js'), math = require('mathjs');
+const express = require('express'), math = require('mathjs');
 
 // create web app server instance
 const app = express();
 app.use(require('multer')().single());
 app.listen(8080);
-
-// use await-able async exec function instead of execSync to avoid server blocking while executing
-const exec = function(cmd, returnStdOut)
-{
-    return new Promise(function(resolve, reject)
-    {
-        const process = ps.exec(cmd);
-        let returnValue = '';
-
-        process.stdout.on('data', returnStdOut ? ((data) => returnValue += data) : console.log);
-        process.stderr.on('data', console.error);
-
-        process.on('close', function(exitCode)
-        {
-            if(exitCode == 0) resolve(returnValue);
-            else reject(exitCode);
-        });
-    });
-};
 
 // inject CORS-enabling headers
 app.use(function(req, res, next)
@@ -63,7 +43,7 @@ app.post('/coords', async function(req, res)
         let deltaX = p2[0] - p1[0];
         let deltaY = p2[1] - p1[1];
         let deltaZ = p2[2] - p1[2];
-        let phi = Math.atan(deltaY / deltaX);
+        let phi = Math.atan2(bestInstance.R[1][0], bestInstance.R[0][0]);//Math.atan(deltaY / deltaX);
 
         console.log(p1, p2);
         res.send({ x, y, z, phi });

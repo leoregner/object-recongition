@@ -42,6 +42,11 @@ services:
      environment:
       - VIRTUAL_HOST=coordsmapping.thesis.leoregner.eu
      restart: always
+  robot:
+      build: ./robot/
+      environment:
+       - VIRTUAL_HOST=robot.thesis.leoregner.eu
+      restart: always
   processengine:
     image: nginx
     volumes:

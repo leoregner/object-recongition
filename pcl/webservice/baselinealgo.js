@@ -166,9 +166,6 @@ module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance =
     // find exact rotation and translation for each height-matching instance
     for(let instance of instances)
     {
-        // cut irrelevant points from scene for each instance to speed up the procedure
-        // TODO
-
         // rotate model around Y axis (sliding on the floor) to find best fitting rotation
         const determineQualityFor = function(instance, deg)
         {
