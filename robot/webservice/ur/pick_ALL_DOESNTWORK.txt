@@ -1,0 +1,33 @@
+def pickObject():
+  global Leo_D435_180Pos=p[-0.5480655793779037,-0.039430896971502025,0.36222532211577996,-3.141590148173117,6.528734294269169E-5,-9.072236422870695E-6]
+  global Leo_D435_Pos=p[-0.69808,-0.03897,0.35439,-2.89736,0.00365,1.20017]
+  global matrix=p[%%%ROBOT_X%%%,%%%ROBOT_Y%%%,%%%ROBOT_Z%%%,0.0,0.0,%%%ROBOT_RZ%%%]
+  global D435_pos= get_actual_tcp_pose ()
+  global kamera_tcp_AG=p[0.14,0.0,0.05,0, d2r (45),0]
+  global AG_pose= pose_add (D435_pos, kamera_tcp_AG)
+  movej(AG_pose, a=1.3962634015954636, v=1.0471975511965976)
+  global part= pose_add (AG_pose, matrix)
+  movej(part, a=1.3962634015954636, v=1.0471975511965976)
+  gripper_1_used = True
+  if (connectivity_checked[0] != 1):
+    if not(rq_set_sid(9, "1")):
+      popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+    end
+    connectivity_checked[0] = 1
+  end
+  if (status_checked[0] != 1):
+    status_checked[0] = 1
+  end
+  rq_set_pos_spd_for(255, 26, 26, "1")
+  rq_go_to("1")
+  rq_wait("1")
+  gripper_1_selected = True
+  gripper_2_selected = False
+  gripper_3_selected = False
+  gripper_4_selected = False
+  gripper_1_used = False
+  gripper_2_used = False
+  gripper_3_used = False
+  gripper_4_used = False
+  movej(Leo_D435_180Pos, a=1.3962634015954636, v=1.0471975511965976)
+end

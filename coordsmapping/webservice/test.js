@@ -21,7 +21,7 @@ let p2 = math.add(math.multiply(bestInstance.R, [ 1, 1, 1 ]), bestInstance.t);
 let deltaX = p2[0] - p1[0];
 let deltaY = p2[1] - p1[1];
 let deltaZ = p2[2] - p1[2];
-let phi = Math.atan2(bestInstance.R[1][0], bestInstance.R[0][0]);//Math.atan(deltaY / deltaX);
+let phi = Math.atan2(bestInstance.R[1][0], bestInstance.R[0][0]) + Math.PI / 2;//Math.atan(deltaY / deltaX);
 
 console.log(p1, p2);
 console.log({ x, y, z, phi, phi_deg: (phi * 180 / Math.PI) });

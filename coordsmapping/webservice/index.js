@@ -36,16 +36,8 @@ app.post('/coords', async function(req, res)
         let x = bestInstance.t[0];
         let y = bestInstance.t[1];
         let z = bestInstance.t[2] + .005;
+        let phi = Math.atan2(bestInstance.R[1][0], bestInstance.R[0][0]) + Math.PI / 2;
 
-        let p1 = math.add(math.multiply(bestInstance.R, [ 0, 0, 0 ]), bestInstance.t);
-        let p2 = math.add(math.multiply(bestInstance.R, [ 1, 1, 1 ]), bestInstance.t);
-
-        let deltaX = p2[0] - p1[0];
-        let deltaY = p2[1] - p1[1];
-        let deltaZ = p2[2] - p1[2];
-        let phi = Math.atan2(bestInstance.R[1][0], bestInstance.R[0][0]);//Math.atan(deltaY / deltaX);
-
-        console.log(p1, p2);
         res.send({ x, y, z, phi });
     }
     catch(x)

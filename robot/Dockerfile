@@ -11,7 +11,7 @@ ADD webservice /root/webservice
 RUN cd /root/webservice && npm install
 
 # expose tcp port for webservice
-EXPOSE 8080/tcp
+EXPOSE 8084/tcp
 
 # launch web service on container start
 ENTRYPOINT [ "bash", "-c", "cd /root/webservice && node index.js" ]
