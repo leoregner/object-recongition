@@ -3,7 +3,7 @@ const express = require('express'), math = require('mathjs');
 // create web app server instance
 const app = express();
 app.use(require('multer')().single());
-app.listen(8080);
+app.listen(8083);
 
 // inject CORS-enabling headers
 app.use(function(req, res, next)

@@ -22,7 +22,7 @@ RUN cd /root/webservice && npm install
 RUN cd /root/webservice && rm -rf build && mkdir build && cd build && cmake .. && make
 
 # expose tcp port for webservice
-EXPOSE 8080/tcp
+EXPOSE 8082/tcp
 
 # launch web service on container start
 ENTRYPOINT [ "bash", "-c", "cd /root/webservice && node index.js" ]

@@ -18,4 +18,4 @@ RUN cd /root/webservice && npm install -y
 
 # start web service
 CMD bash -c "cd /root/webservice && node index.js"
-EXPOSE 8080/tcp
+EXPOSE 8081/tcp

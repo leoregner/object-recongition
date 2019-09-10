@@ -32,7 +32,7 @@ const log = function()
 // create web app server instance
 const app = express();
 app.use(fileUpload({ useTempFiles: true, tempFileDir: '/tmp/' }));
-app.listen(8080);
+app.listen(8082);
 
 // inject CORS-enabling headers
 app.use(function(req, res, next)

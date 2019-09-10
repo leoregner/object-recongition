@@ -15,14 +15,24 @@ This project has been configured to automatically deploy changes of the `master`
 ![Build Status](https://gitlab.leoregner.eu/leoregner/master-thesis/badges/master/build.svg)
 
 # Dependencies, Libraries & Frameworks
-TODO - list all third party software, there licenses and successfully tested version numbers
+This project uses the following third party software:
 
-# Start
+*  TODO - list all third party software, there licenses and successfully tested version numbers
+
+# Start Using Docker
 Using [Docker](https://www.docker.com/), the dependencies are installed automatically.
-All process tasks are deployed as web services in separate Docker containers.
+All process tasks are deployed as web services in separate Docker containers and can be addressed through a central proxy service.
 
 ```bash
 docker-compose up -d --build
+```
+
+# Start Services Natively
+Alternatively, all services can be executed natively on the local machine.
+All dependencies, libraries and programs that would be installed automatically within the Docker containers are a prerequisite then.
+
+```bash
+./raspberrypi.sh
 ```
 
 ## Launch Process
