@@ -20,9 +20,7 @@ app.post('/scanpos', async function(req, res)
     try
     {
         let script = fs.readFileSync('ur/scanpos.txt', 'utf8');
-
-        const response = await runRobotScript(script);
-        res.send({ sent: true, response });
+        await runRobotScript(script, req, res);
     }
     catch(x)
     {
@@ -39,16 +37,14 @@ app.post('/pick', async function(req, res)
     try
     {
         const coordinates = JSON.parse(req.body.coordinates);
-        let robot_x = coordinates.y, robot_y = -coordinates.x, robot_z = coordinates.z + .01, robot_rz = coordinates.phi;
+        let robot_x = coordinates.y, robot_y = -coordinates.x, robot_z = coordinates.z + .005, robot_rz = coordinates.phi;
 
         let script = fs.readFileSync('ur/pick.txt', 'utf8');
         script = script.split('%%%ROBOT_X%%%').join(robot_x);
         script = script.split('%%%ROBOT_Y%%%').join(robot_y);
         script = script.split('%%%ROBOT_Z%%%').join(robot_z);
         script = script.split('%%%ROBOT_RZ%%%').join(robot_rz);
-
-        const response = await runRobotScript(script);
-        res.send({ sent: true, response });
+        await runRobotScript(script, req, res);
     }
     catch(x)
     {
@@ -57,19 +53,16 @@ app.post('/pick', async function(req, res)
     }
 });
 
-async function runRobotScript(script, host = 'http://localhost:8085') // "urweb" (raspberry pi 192.168.30.30)
+async function runRobotScript(script, req, res, host = 'http://localhost:8085') // send script to "urweb" | @see https://intra.acdp.at/gogs/mkunz/urweb
 {
-    console.log(script);
+    let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    for(let header of [ 'CALLBACK', 'CPEE-CALLBACK', 'CPEE-CALLBACK-ID', 'CPEE-INSTANCE-URL' ])
+    {
+        let value = req.header(header);
+        if(value) headers[header] = value;
+    }
 
-    try
-    {
-        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-        let response = await axios({ url: host + '/cmd', method: 'POST', headers, data: queryString.encode({ script }) });
-        return response.data;
-    }
-    catch(x)
-    {
-        console.error(x);
-        return { error: x };
-    }
+    const response = await axios({ url: host + '/cmd', method: 'POST', headers, data: queryString.encode({ script, 'callback': (req.body || {}).callback }) });
+    res.set(response.headers);
+    res.send({ sent: true, response: response.data });
 }
