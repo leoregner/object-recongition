@@ -1,0 +1,9 @@
+def goToPhotoPos():
+
+  # move over item
+  global D435_pos= get_actual_tcp_pose ()
+  global matrix=p[%%%ROBOT_X%%%,%%%ROBOT_Y%%%,0.0,0.0,0.0,0]
+  global part= pose_add (D435_pos, matrix)
+  movej(part, a=1.3962634015954636, v=1.0471975511965976)
+
+end

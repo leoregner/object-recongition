@@ -41,3 +41,34 @@ app.get('/obj/universalrobot', function(req, res)
     res.header('Content-Type', 'text/plain');
     res.send(txt);
 });
+
+app.get('/photo', function(req, res)
+{
+    const rs2 = require('node-librealsense'), pngFile = '/tmp/currentRealSensePhoto.png';
+
+    let colorizer = new rs2.Colorizer();
+    let pipeline = new rs2.Pipeline();
+    pipeline.start();
+    pipeline.waitForFrames();
+
+    let frameset = pipeline.waitForFrames();
+    for(let i = 0; i < frameset.size; ++i)
+    {
+        let frame = frameset.at(i);
+        if(frame instanceof rs2.VideoFrame)
+        {
+            if(frame instanceof rs2.DepthFrame)
+                frame = colorizer.colorize(frame);
+            rs2.util.writeFrameToFile(pngFile, frame, 'png');
+        }
+    }
+
+    pipeline.stop();
+    pipeline.destroy();
+    rs2.cleanup();
+
+    // send photo via web service
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Content-Type', 'image/png');
+    res.sendFile(pngFile);
+});
