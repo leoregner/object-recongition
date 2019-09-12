@@ -1,4 +1,5 @@
-const express = require('express'), ps = require('child_process'), fs = require('fs'), axios = require('axios'), queryString = require('querystring');
+const express = require('express'), ps = require('child_process'), fs = require('fs'), net = require('net');
+const axios = require('axios'), queryString = require('querystring');
 
 // create web app server instance
 const app = express();
@@ -20,7 +21,9 @@ app.post('/scanpos', async function(req, res)
     try
     {
         let script = fs.readFileSync('ur/scanpos.txt', 'utf8');
-        await runRobotScript(script, req, res);
+        runRobotScript(script);
+
+        res.send({ sent: true });
     }
     catch(x)
     {
@@ -37,14 +40,16 @@ app.post('/photopos', async function(req, res)
     try
     {
         const coordinates = JSON.parse(req.body.coordinates);
-        let robot_x = coordinates.y, robot_y = -coordinates.x, robot_z = coordinates.z + .005, robot_rz = coordinates.phi;
+        let robot_x = coordinates.y, robot_y = -coordinates.x, robot_z = coordinates.z, robot_rz = coordinates.phi;
 
         let script = fs.readFileSync('ur/photopos.txt', 'utf8');
         script = script.split('%%%ROBOT_X%%%').join(robot_x);
         script = script.split('%%%ROBOT_Y%%%').join(robot_y);
         script = script.split('%%%ROBOT_Z%%%').join(robot_z);
         script = script.split('%%%ROBOT_RZ%%%').join(robot_rz);
-        await runRobotScript(script, req, res);
+        runRobotScript(script);
+
+        res.send({ sent: true });
     }
     catch(x)
     {
@@ -68,7 +73,9 @@ app.post('/pick', async function(req, res)
         script = script.split('%%%ROBOT_Y%%%').join(robot_y);
         script = script.split('%%%ROBOT_Z%%%').join(robot_z);
         script = script.split('%%%ROBOT_RZ%%%').join(robot_rz);
-        await runRobotScript(script, req, res);
+        runRobotScript(script);
+
+        res.send({ sent: true });
     }
     catch(x)
     {
@@ -77,16 +84,19 @@ app.post('/pick', async function(req, res)
     }
 });
 
-async function runRobotScript(script, req, res, host = 'http://localhost:8085') // send script to "urweb" | @see https://intra.acdp.at/gogs/mkunz/urweb
+// sends a UR script to the specified Universal Robot socket
+function runRobotScript(script, host = '192.168.30.200', port = 30001) // @see https://bit.ly/2kxgQuE and https://bit.ly/2lMAcfm
 {
-    let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-    for(let header of [ 'CALLBACK', 'CPEE-CALLBACK', 'CPEE-CALLBACK-ID', 'CPEE-INSTANCE-URL' ])
+    try
     {
-        let value = req.header(header);
-        if(value) headers[header] = value;
+        let client = net.createConnection({ host, port });
+        client.setTimeout(1000);
+        client.setEncoding('utf8');
+        client.on('data', function() { client.destroy() });
+        client.write(script);
     }
-
-    const response = await axios({ url: host + '/cmd', method: 'POST', headers, data: queryString.encode({ script, 'callback': (req.body || {}).callback }) });
-    res.set(response.headers);
-    res.send({ sent: true, response: response.data });
+    catch(x)
+    {
+        console.error(x);
+    }
 }

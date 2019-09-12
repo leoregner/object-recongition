@@ -30,7 +30,8 @@ app.post('/coords', async function(req, res)
         {
             x: Number.parseFloat(req.body.off_x || 0),
             y: Number.parseFloat(req.body.off_y || 0),
-            z: Number.parseFloat(req.body.off_z || 0)
+            z: Number.parseFloat(req.body.off_z || 0),
+            phi: Number.parseFloat(req.body.off_phi || 0)
         });
 
         if(instances.length > 0)
@@ -44,7 +45,7 @@ app.post('/coords', async function(req, res)
         // calculate translation/coordinates of origin point
         let x = bestInstance.t[0] + modelOff.x - .010;
         let y = bestInstance.t[1] + modelOff.y + .007;
-        let z = bestInstance.t[2] + modelOff.z + .005;
+        let z = bestInstance.t[2] + modelOff.z + .003;
 
         // calculate rotation angle around Z axis | @see https://de.wikipedia.org/wiki/Kosinussatz
         let M = [ 0, 0, 0 ];
@@ -52,7 +53,7 @@ app.post('/coords', async function(req, res)
         let K = math.multiply(bestInstance.R, E);
         let pointDistance2D = (p1, p2) => Math.sqrt((p2[0] - p1[0]) * (p2[0] - p1[0]) + (p2[1] - p1[1]) * (p2[1] - p1[1]));
         let a = pointDistance2D(E, M), b = pointDistance2D(K, M), c = pointDistance2D(K, E);
-        let phi = Math.acos((a * a + b * b - c * c) / (2 * a * b)) - Math.PI / 4;
+        let phi = Math.acos((a * a + b * b - c * c) / (2 * a * b)) - (Math.PI / 4) + (modelOff.phi * Math.PI / 180);
 
         res.send({ x, y, z, phi });
     }

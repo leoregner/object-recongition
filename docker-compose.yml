@@ -1,51 +1,25 @@
 version: '2.3'
 services:
-  #camera:
-  #  image: node:8.15-alpine
-  #  volumes:
-  #   - ./camera/webservice:/root/webservice:rw
-  #  environment:
-  #   - VIRTUAL_HOST=camera.thesis.leoregner.eu
-  #  expose:
-  #   - "80"
-  #  command: sh -c "cd /root/webservice && npm install -y && node index.js"
-  #  restart: always
-  #r2n2:
-  #  build: ./r2n2/
-  #  runtime: nvidia
-  #  environment:
-  #   - VIRTUAL_HOST=r2n2.thesis.leoregner.eu
-  #  restart: always
-  #omarpadierna:
-  #  build: ./omarpadierna/
-  #  environment:
-  #   - VIRTUAL_HOST=omarpadierna.thesis.leoregner.eu
-  #  restart: always
-  #cloudcompare:
-  #  build: ./cloudcompare/
-  #  environment:
-  #   - VIRTUAL_HOST=cloudcompare.thesis.leoregner.eu
-  #  restart: always
   realsense:
     build: ./realsense/
-    environment:
-     - VIRTUAL_HOST=realsense.thesis.leoregner.eu
+    ports:
+     - "8081:8081"
     privileged: true # share physical devices with container
     restart: always
   pcl:
     build: ./pcl/
-    environment:
-     - VIRTUAL_HOST=pcl.thesis.leoregner.eu
+    ports:
+     - "8082:8082"
     restart: always
   coordsmapping:
      build: ./coordsmapping/
-     environment:
-      - VIRTUAL_HOST=coordsmapping.thesis.leoregner.eu
+     ports:
+      - "8083:8083"
      restart: always
   robot:
       build: ./robot/
-      environment:
-       - VIRTUAL_HOST=robot.thesis.leoregner.eu
+      ports:
+       - "8084:8084"
       restart: always
   processengine:
     image: nginx
