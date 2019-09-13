@@ -16,12 +16,15 @@ const bla = require('./baselinealgo.js');
 
     // === TEST CASES UNIVERSAL ROBOT ===
     //let result = await bla('example_models/cuboid5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot2.pcd", 90, .02, .373);// good fit 5 mm tolernace
-    //let result = await bla('example_models/model5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot2.pcd", 90, .02, .373);// good fit 5 mm tolerance
+    let result = await bla('example_models/model5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot2.pcd", 90, .02, .373);// good fit 5 mm tolerance
     //let result = await bla('example_models/cylinder5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot2.pcd", 90, .02, .372);// good fit 5 mm tolerance
     //let result = await bla('example_models/cuboid5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot5.pcd", 90, .02, .372);// perfect fit 5 mm tolerance
     //let result = await bla('example_models/cuboid5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot6.pcd", 90, .02, .372);// perfect fit 5 mm tolerance
     //let result = await bla('example_models/model5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot6.pcd", 90, .02, .372);// perfect fit 5 mm tolerance
-    let result = await bla('example_models/cylinder5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot6.pcd", 90, .02, .372);// perfect fit 5 mm tolerance
+    //let result = await bla('example_models/cylinder5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot6.pcd", 90, .02, .372);// perfect fit 5 mm tolerance
+    //let result = await bla('example_models/cuboid5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot7.pcd", 90, .02, .372, .003);// good fit 3 mm tolerance
+    //let result = await bla('example_models/model5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot7.pcd", 90, .02, .372, .003);// wrong location with 3 mm
+    //let result = await bla('example_models/cylinder5000.pcd', "/home/leo/Dropbox/19_SS/Master's Thesis/work files/scene scans/seestadt/universalrobot7.pcd", 90, .02, .372, .005);// wrong location with 3/5 mm
 
     let timeAfter = new Date().getTime();
 

@@ -125,12 +125,14 @@ app.post('/bl', async function(req, res)
         if(req.files.scene) await exec('mv "' + req.files['scene'].tempFilePath + '" in_' + id + '/scene.obj');
         await exec('build/converter "in_' + id + '/scene.obj" "in_' + id + '/scene.pcd"');
 
+        let minClusterDistance = 0.02; // meters
         let angle = Number.parseInt(req.query.angle) || 45; // degrees
         let cameraHeight = Number.parseFloat(req.query.height) || .19; // meters
-        let minClusterDistance = 0.02; // meters
+        let heightTolerance = Number.parseInt(req.query.tolerance) || .005; // mm
 
         // execute base line algorithm
-        let json = await require('./baselinealgo.js')('in_' + id + '/model.pcd', 'in_' + id + '/scene.pcd', angle, minClusterDistance, cameraHeight);
+        const baselineObjectRecognition = require('./baselinealgo.js');
+        let json = baselineObjectRecognition('in_' + id + '/model.pcd', 'in_' + id + '/scene.pcd', angle, minClusterDistance, cameraHeight, tolerance);
         res.send(json);
     }
     catch(x)

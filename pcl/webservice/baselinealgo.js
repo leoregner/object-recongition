@@ -1,11 +1,9 @@
 const pcd = require('./pcd.js'), math = require('mathjs');
 
 /** @return whether the given values are approximately the same */
-function isApproximatelyTheSame(reference, value)
+function isApproximatelyTheSame(reference, value, tolerance = .005)
 {
-    //const tolerance = 2; // per cent - subject to fine-tuning
-    const tolerance = .005 / reference * 100; // 5 mm
-    return value > reference * (1 - tolerance / 100) && value < reference * (1 + tolerance / 100);
+    return value > reference - tolerance && value < reference + tolerance;
 }
 
 /** @see copy of same function in pointcloud.js */
@@ -120,7 +118,7 @@ function closestPointsDistanceSum(model, r, t, scene)
 }
 
 /** my baseline algorithm for object recognition */
-module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance = .02, camHeight = .19)
+module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance = .02, camHeight = .19, heightTolerance = .005)
 {
     const model = new pcd.PcdFile(modelFile);
     const scene = new pcd.PcdFile(sceneFile);
@@ -150,8 +148,11 @@ module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance =
     // find points with same height in scene and assume that there's an instance
     let clusterTops = [];
     for(let i = 0; i < scene.countPoints(); i += 5)
-        if(isApproximatelyTheSame(highestPoint.coords[1], mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2], camHeight)))
+    {
+        let pointHeight = mapDepthToFloor(angle, scene.getPoint(i)[0], scene.getPoint(i)[1], scene.getPoint(i)[2], camHeight);
+        if(isApproximatelyTheSame(highestPoint.coords[1], pointHeight, heightTolerance))
             clusterTops.push(scene.getPoint(i));
+    }
 
     // if no points have been found, no instances exist
     if(clusterTops.length == 0)
@@ -187,7 +188,8 @@ module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance =
 
         // optimize number of comparisons when rotation around Y axis
         for(let deg = 0; deg < 360; deg += 12) determineQualityFor(instance, deg);
-        for(let basis = instance.deg, deg = instance.deg - 11; deg <= basis + 11; deg == basis - 1 ? deg += 2 : ++deg) determineQualityFor(instance, deg);
+        for(let basis = instance.deg, deg = instance.deg - 11; deg <= basis + 11; deg == basis - 1 ? deg += 2 : ++deg)
+            determineQualityFor(instance, deg);
 
         // to save memory and bandwith, remove instance properties that are no longer needed
         delete instance.deg;
