@@ -187,12 +187,13 @@ module.exports = function(modelFile, sceneFile, angle = 45, minClusterDistance =
         };
 
         // optimize number of comparisons when rotation around Y axis
-        for(let deg = 0; deg < 360; deg += 12) determineQualityFor(instance, deg);
+        for(let deg = 0; deg < 360; deg += 12)
+            determineQualityFor(instance, deg);
         for(let basis = instance.deg, deg = instance.deg - 11; deg <= basis + 11; deg == basis - 1 ? deg += 2 : ++deg)
             determineQualityFor(instance, deg);
 
-        // to save memory and bandwith, remove instance properties that are no longer needed
-        delete instance.deg;
+        // to save memory and bandwidth, remove instance properties that are no longer needed
+        //delete instance.deg;
         delete instance.points;
         delete instance.centroid;
     }

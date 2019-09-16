@@ -46,14 +46,20 @@ app.post('/coords', async function(req, res)
         let x = bestInstance.t[0] + modelOff.x - .010;
         let y = bestInstance.t[1] + modelOff.y + .007;
         let z = bestInstance.t[2] + modelOff.z + .003;
+        let phi = undefined;
 
         // calculate rotation angle around Z axis | @see https://de.wikipedia.org/wiki/Kosinussatz
-        let M = [ 0, 0, 0 ];
-        let E = [ 1, 1, 0 ];
-        let K = math.multiply(bestInstance.R, E);
-        let pointDistance2D = (p1, p2) => Math.sqrt((p2[0] - p1[0]) * (p2[0] - p1[0]) + (p2[1] - p1[1]) * (p2[1] - p1[1]));
-        let a = pointDistance2D(E, M), b = pointDistance2D(K, M), c = pointDistance2D(K, E);
-        let phi = Math.acos((a * a + b * b - c * c) / (2 * a * b)) - (Math.PI / 4) + (modelOff.phi * Math.PI / 180);
+        if(bestInstance.deg)
+            phi = bestInstance.deg * Math.PI / 180;
+        else
+        {
+            let M = [ 0, 0, 0 ];
+            let E = [ 1, 1, 0 ];
+            let K = math.multiply(bestInstance.R, E);
+            let pointDistance2D = (p1, p2) => Math.sqrt((p2[0] - p1[0]) * (p2[0] - p1[0]) + (p2[1] - p1[1]) * (p2[1] - p1[1]));
+            let a = pointDistance2D(E, M), b = pointDistance2D(K, M), c = pointDistance2D(K, E);
+            let phi = Math.acos((a * a + b * b - c * c) / (2 * a * b)) - (Math.PI / 4) + (modelOff.phi * Math.PI / 180);
+        }
 
         res.send({ x, y, z, phi });
     }
