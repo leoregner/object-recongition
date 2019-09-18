@@ -1,11 +1,6 @@
-# Dependencies, Libraries & Frameworks
-This project uses the following third party software:
-
-*  TODO - list all third party software, there licenses and successfully tested version numbers
-
 # Start Using Docker
-Using [Docker](https://www.docker.com/), the dependencies are installed automatically.
-All process tasks are deployed as web services in separate Docker containers and can be addressed through a central proxy service.
+Using [Docker](https://www.docker.com/), all required dependencies are installed automatically.
+All process tasks are deployed as web services in separate Docker containers and can be accessed through the published ports.
 
 ```bash
 docker-compose up -d --build
@@ -19,8 +14,8 @@ All dependencies, libraries and programs that would be installed automatically w
 ./raspberrypi.sh
 ```
 
-## Launch Process
-Navigate to the HTTP port of the [process engine](http://processengine.thesis.leoregner.eu/) and drop the following JSON process model:
+# Launch Process
+Navigate to the [process engine](http://processengine.localhost/) and drop the following JSON process model:
 
 ```json
 [
@@ -32,9 +27,16 @@ Navigate to the HTTP port of the [process engine](http://processengine.thesis.le
             [
                 {
                     "type": "webservice",
+                    "name": "scanning position",
+                    "method": "POST",
+                    "url": "http://localhost:8084/scanpos",
+                    "post": "sleep(5 * 1000);"
+                },
+                {
+                    "type": "webservice",
                     "name": "scan scene",
                     "method": "GET",
-                    "url": "http://realsense.thesis.leoregner.eu/obj",
+                    "url": "http://localhost:8081/obj/universalrobot",
                     "pre": "request.expect = 'binary';",
                     "post": "storage.saveBinary('scene', responseBody);"
                 }
@@ -42,9 +44,9 @@ Navigate to the HTTP port of the [process engine](http://processengine.thesis.le
             [
                 {
                     "type": "webservice",
-                    "name": "select model",
+                    "name": "select object to find",
                     "method": "GET",
-                    "url": "http://pcl.thesis.leoregner.eu/example_models/model5000.pcd",
+                    "url": "http://localhost:8082/example_models/cuboid5000.pcd",
                     "pre": "request.expect = 'binary';",
                     "post": "storage.saveBinary('model', responseBody);"
                 }
@@ -55,9 +57,25 @@ Navigate to the HTTP port of the [process engine](http://processengine.thesis.le
         "type": "webservice",
         "name": "object recognition",
         "method": "POST",
-        "url": "http://pcl.thesis.leoregner.eu/ta",
+        "url": "http://localhost:8082/bl?angle=90&height=.372",
         "pre": "request.data = new FormData();\nrequest.contentType = false;\nrequest.data.append('scene', storage.loadBinary('scene'), 'scene.obj');\nrequest.data.append('model', storage.loadBinary('model'), 'model.pcd');",
         "post": "storage.saveJSON('recognition', responseBody);"
+    },
+    {
+        "type": "webservice",
+        "name": "calculate robot coordinates",
+        "method": "POST",
+        "url": "http://localhost:8083/coords",
+        "pre": "request.data = new FormData();\nrequest.contentType = false;\nrequest.data.append('recognition', this.recognition);",
+        "post": "console.log('move clamshell to: ', responseBody);\nstorage.saveJSON('clamshell', responseBody);"
+    },
+    {
+        "type": "webservice",
+        "name": "move clamshell",
+        "method": "POST",
+        "url": "http://localhost:8084/pick",
+        "pre": "request.data = new FormData();\nrequest.contentType = false;\nrequest.data.append('coordinates', this.clamshell);",
+        "post": "console.log(responseBody);"
     }
 ]
 ```

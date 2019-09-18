@@ -26,7 +26,7 @@ services:
     volumes:
      - ./processengine:/usr/share/nginx/html:rw
     environment:
-     - VIRTUAL_HOST=processengine.thesis.leoregner.eu
+     - VIRTUAL_HOST=processengine.localhost
     restart: always
   reverseproxy:
     image: jwilder/nginx-proxy
