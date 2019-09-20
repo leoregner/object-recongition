@@ -68,7 +68,7 @@ app.post('/pick', async function(req, res)
         const coordinates = JSON.parse(req.body.coordinates);
         let robot_x = coordinates.y, robot_y = -coordinates.x, robot_z = coordinates.z + .005, robot_rz = coordinates.phi;
 
-        let script = fs.readFileSync('ur/pick.txt', 'utf8');
+        let script = fs.readFileSync('ur/pick.txt', 'utf8'); // script created using GUI provided by Universal Robot
         script = script.split('%%%ROBOT_X%%%').join(robot_x);
         script = script.split('%%%ROBOT_Y%%%').join(robot_y);
         script = script.split('%%%ROBOT_Z%%%').join(robot_z);

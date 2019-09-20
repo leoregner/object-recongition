@@ -12,7 +12,7 @@ async function experiment()
     {
         // scan scene
         let beginScanTime = new Date().getTime();
-        const sceneObj = await axios.get('http://realsense.thesis.leoregner.eu/obj?frames=' + frames);
+        const sceneObj = await axios.get('http://localhost:8081/obj?frames=' + frames);
         const sceneObjFile = tmp.fileSync().name;
         fs.writeFileSync(sceneObjFile, sceneObj.data);
         let scanDuration = new Date().getTime() - beginScanTime;
@@ -76,7 +76,7 @@ async function experiment()
                 let uploadData = new FormData();
                 let modelStream = fs.createReadStream('../../pcl/webservice/example_models/' + scenario.model); uploadData.append('model', modelStream);
                 let sceneStream = fs.createReadStream(sceneObjFile); uploadData.append('scene', sceneStream);
-                let result = { data: await upload('http://pcl.thesis.leoregner.eu/ta', uploadData) };
+                let result = { data: await upload('http://localhost:8082/ta', uploadData) };
 
                 // map coordinates to world
                 let m1 = [ null, null, null ], m2 = [ null, null, null ];
@@ -117,7 +117,7 @@ async function experiment()
                                 uploadData.append('model', modelStream);
                                 let sceneStream = fs.createReadStream(sceneObjFile);
                                 uploadData.append('scene', sceneStream);
-                                let result = { data: await upload('http://pcl.thesis.leoregner.eu/cg?' + cgParams, uploadData) };
+                                let result = { data: await upload('http://localhost:8082/cg?' + cgParams, uploadData) };
 
                                 let m1 = [ null, null, null ], m2 = [ null, null, null ];
                                 if(!result.error && result.data.models.length > 0)

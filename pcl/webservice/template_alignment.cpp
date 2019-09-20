@@ -1,4 +1,5 @@
 // @see http://pointclouds.org/documentation/tutorials/template_alignment.php#template-alignment
+// the PCL is licensed under the BSD license - https://github.com/PointCloudLibrary/pcl/blob/master/LICENSE.txt
 
 #include <limits>
 #include <fstream>

@@ -1,3 +1,6 @@
+# @see https://github.com/chrischoy/3D-R2N2/blob/master/demo.py
+# 3D-R2N2 is licensed under the MIT license - https://github.com/chrischoy/3D-R2N2/blob/master/LICENSE
+
 import os
 import sys
 import shutil
@@ -21,23 +24,23 @@ def load_input_images(folder):
 
 def main():
     '''Main demo function'''
-    
+
     # load images
     input_folder_name = sys.argv[1] if len(sys.argv) > 1 else 'in_demo'
     imgs = load_input_images(input_folder_name)
-    
+
     # get output file name from command line argument
     output_file_name = sys.argv[2] if len(sys.argv) > 2 else 'demo.obj'
-    
+
     # use the default network model
     NetClass = load_model('ResidualGRUNet')
     net = NetClass(compute_grad = False)
     net.load('output/ResidualGRUNet/default_model/weights.npy')
     solver = Solver(net)
-    
+
     # run the network
     voxel_prediction, _ = solver.test_output(imgs)
-    
+
     # save the prediction to an OBJ (mesh) file
     voxel2obj(output_file_name, voxel_prediction[0, :, 1, :, :] > cfg.TEST.VOXEL_THRESH)
 

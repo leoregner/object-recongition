@@ -1,4 +1,4 @@
-// @see http://pointclouds.org/documentation/tutorials/pcd_file_format.php
+// based on @see http://pointclouds.org/documentation/tutorials/pcd_file_format.php
 
 const fs = require('fs');
 

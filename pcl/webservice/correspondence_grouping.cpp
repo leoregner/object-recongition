@@ -1,4 +1,5 @@
 // @see http://pointclouds.org/documentation/tutorials/correspondence_grouping.php#correspondence-grouping
+// the PCL is licensed under the BSD license - https://github.com/PointCloudLibrary/pcl/blob/master/LICENSE.txt
 
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_cloud.h>

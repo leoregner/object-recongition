@@ -1,0 +1,2 @@
+Except for third-party code and libraries or unless otherwise stated, copyright Leopold Mathias Regner, 2019.
+Contact: me(at)leoregner(dot)eu

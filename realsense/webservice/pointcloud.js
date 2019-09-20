@@ -2,7 +2,7 @@
 
 'use strict';
 // Copyright Leopold Mathias Regner
-// based on code provided by the Intel Corporation
+// based on code provided by the Intel Corporation - librealsense is licensed under the Apache license https://github.com/IntelRealSense/librealsense/blob/master/LICENSE
 
 const rs2 = require('node-librealsense'), fs = require('fs');
 

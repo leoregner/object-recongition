@@ -1,5 +1,6 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="300px" height="300px" viewBox="0 0 3000 3000" preserveAspectRatio="xMidYMid meet">
+<!-- based on @see https://de.wikipedia.org/wiki/Datei:Nederlands_verkeersbord_D1.svg -->
 <g id="layer101" fill="#0e518d" stroke="none">
  <path d="M1265 2985 c-304 -48 -581 -185 -799 -395 -231 -223 -374 -480 -443 -800 -26 -121 -26 -459 0 -579 81 -377 277 -688 572 -913 188 -142 439 -247 680 -284 107 -16 328 -18 428 -4 258 38 505 139 702 288 293 223 491 538 572 913 26 120 26 458 0 579 -66 303 -195 546 -406 763 -229 235 -516 382 -846 433 -110 17 -351 16 -460 -1z"/>
  </g>
