@@ -128,11 +128,11 @@ app.post('/bl', async function(req, res)
         let minClusterDistance = 0.02; // meters
         let angle = Number.parseInt(req.query.angle) || 45; // degrees
         let cameraHeight = Number.parseFloat(req.query.height) || .19; // meters
-        let heightTolerance = Number.parseInt(req.query.tolerance) || .005; // mm
+        let heightTolerance = Number.parseFloat(req.query.tolerance) || .005; // meters
 
         // execute base line algorithm
         const baselineObjectRecognition = require('./baselinealgo.js');
-        let json = baselineObjectRecognition('in_' + id + '/model.pcd', 'in_' + id + '/scene.pcd', angle, minClusterDistance, cameraHeight, tolerance);
+        let json = baselineObjectRecognition('in_' + id + '/model.pcd', 'in_' + id + '/scene.pcd', angle, minClusterDistance, cameraHeight, heightTolerance);
         res.send(json);
     }
     catch(x)
